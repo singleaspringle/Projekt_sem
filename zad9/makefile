@@ -1,5 +1,5 @@
 all:
-	cc main.c funkcje.c -o wykonaj -lcurl
+	cc main.c funkcje.c -o wykonaj -lcurl -ljson   \
 
 test:
 	./wykonaj qwerty_29 info move move rotate right move explore

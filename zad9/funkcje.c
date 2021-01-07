@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <curl/curl.h>
+#include "cJSON/cJSON.h"
 #include "funkcje.h"
 
 static size_t write_callback(void *data, size_t size, size_t nmemb, void *userp)
@@ -79,69 +80,88 @@ char *make_request(char *url)
     curl_global_cleanup();
 }
 
-void info(char *token)
+char* info(char *token)
 {
     char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/info/")+strlen(token)+1));
     strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/info/");
     strcat(url, token);
 
-    printf("URL: %s\n\n", url);
+    cJSON *info = cJSON_Parse(make_request(url));
+    
+    cJSON* status;
+    cJSON* payload;
+    cJSON* name;
+    cJSON* current_x;
+    cJSON* current_y;
+    cJSON* current_session;
+    cJSON* direction;
+    cJSON* step;
+    cJSON* field_type;
+    cJSON* field_bonus;
 
-    printf("%s\n", make_request(url));
+    if(info == NULL){
+        const char* error_ptr = cJSON_GetErrorPtr();
+        if(error_ptr != NULL){
+            printf("Error before: %s\n", error_ptr);
+        }
+        status->valuestring = "Error";
+        goto end;
+    }
 
+    status = cJSON_GetObjectItemCaseSensitive(info, "status");
+    if(cJSON_IsString(status) && (status->valuestring != NULL))
+        printf("status: %s\n", status->valuestring);
+
+    
     free(url);
+
+    end:
+        cJSON_Delete(info);
+        return status->valuestring;
 }
 
-void move(char *token)
-{
-    char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/move/")+strlen(token)+1));
-    strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/move/");
-    strcat(url, token);
+// char* move(char *token)
+// {
+//     char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/move/")+strlen(token)+1));
+//     strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/move/");
+//     strcat(url, token);
 
-    printf("URL: %s\n\n", url);
+//     return make_request(url);
 
-    printf("%s\n", make_request(url));
+//     free(url);
+// }
 
-    free(url);
-}
+// char* rotate(char *token, char *rotation)
+// {
+//     char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/rotate/")+strlen(token)+strlen(rotation)+2)); //+2 na slasha i \0
+//     strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/rotate/");
+//     strcat(url, token);
+//     strcat(url, "/");
+//     strcat(url, rotation);
 
-void rotate(char *token, char *rotation)
-{
-    char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/rotate/")+strlen(token)+strlen(rotation)+2)); //+2 na slasha i \0
-    strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/rotate/");
-    strcat(url, token);
-    strcat(url, "/");
-    strcat(url, rotation);
+//     return make_request(url);
 
-    printf("URL: %s\n\n", url);
+//     free(url);
+// }
 
-    printf("%s\n", make_request(url));
+// char* explore(char *token)
+// {
+//     char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/explore/")+strlen(token)+1));
+//     strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/explore/");
+//     strcat(url, token);
 
-    free(url);
-}
+//     return make_request(url);
 
-void explore(char *token)
-{
-    char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/explore/")+strlen(token)+1));
-    strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/explore/");
-    strcat(url, token);
+//     free(url);
+// }
 
-    printf("URL: %s\n\n", url);
+// char* reset(char *token)
+// {
+//     char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/reset/")+strlen(token)+1));
+//     strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/reset/");
+//     strcat(url, token);
 
-    printf("%s\n", make_request(url));
+//     return make_request(url);
 
-    free(url);
-}
-
-void reset(char *token)
-{
-    char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/reset/")+strlen(token)+1));
-    strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/reset/");
-    strcat(url, token);
-
-    printf("URL: %s\n\n", url);
-
-    printf("%s\n", make_request(url));
-
-    free(url);
-}
+//     free(url);
+// }
