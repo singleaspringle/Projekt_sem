@@ -42,6 +42,8 @@ char *make_request(char *url)
     chunk.size = 0;
     chunk.response = NULL;
 
+    curl_global_init(0);
+
     curl = curl_easy_init();
     if (curl)
     {
@@ -69,11 +71,12 @@ char *make_request(char *url)
         {
             return chunk.response;
         }
-
-        /* zawsze po sobie sprzątaj */
-        free(chunk.response);
-        curl_easy_cleanup(curl);
     }
+    
+    /* zawsze po sobie sprzątaj */
+    free(chunk.response);
+    curl_easy_cleanup(curl);
+    curl_global_cleanup();
 }
 
 void info(char *token)
