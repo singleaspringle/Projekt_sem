@@ -43,14 +43,12 @@ char *make_request(char *url)
     chunk.size = 0;
     chunk.response = NULL;
 
-    curl_global_init(0);
-
     curl = curl_easy_init();
     if (curl)
     {
         curl_easy_setopt(curl, CURLOPT_URL, url);
         curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
-        curl_easy_setopt(curl, CURLOPT_HEADER, 1L);
+        //curl_easy_setopt(curl, CURLOPT_HEADER, 1L);
 
         /* to jest funkcja 'callback', która będzie wywołana przez curl gdy odczyta on kawałek danych
        ta funkcja musi mieć wywołanie zgodne z wymaganiami, które możesz sprawdzić tutaj:
@@ -77,7 +75,6 @@ char *make_request(char *url)
     /* zawsze po sobie sprzątaj */
     free(chunk.response);
     curl_easy_cleanup(curl);
-    curl_global_cleanup();
 }
 
 cJSON* info(char *token)
@@ -86,9 +83,7 @@ cJSON* info(char *token)
     strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/info/");
     strcat(url, token);
 
-    cJSON *info = NULL;
-    info = cJSON_Parse(make_request(url));
-    
+    cJSON* info = NULL;
     cJSON* status = NULL;
     cJSON* payload = NULL;
     cJSON* name = NULL;
@@ -99,6 +94,9 @@ cJSON* info(char *token)
     cJSON* step = NULL;
     cJSON* field_type = NULL;
     cJSON* field_bonus = NULL;
+    cJSON* element = NULL;
+
+    info = cJSON_Parse(make_request(url));
 
     if(info == NULL){
         const char* error_ptr = cJSON_GetErrorPtr();
@@ -108,19 +106,20 @@ cJSON* info(char *token)
     }
 
     status = cJSON_GetObjectItemCaseSensitive(info, "status");
-    payload = cJSON_GetObjectItemCaseSensitive(status, "payload");
-    name = cJSON_GetObjectItemCaseSensitive(payload, "name");
-    current_x = cJSON_GetObjectItemCaseSensitive(payload, "current_x");
-    current_y = cJSON_GetObjectItemCaseSensitive(payload, "current_y");
-    current_session = cJSON_GetObjectItemCaseSensitive(payload, "current_session");
-    direction = cJSON_GetObjectItemCaseSensitive(payload, "direction");
-    step = cJSON_GetObjectItemCaseSensitive(payload, "step");
-    field_type = cJSON_GetObjectItemCaseSensitive(payload, "field_type");
-    field_bonus = cJSON_GetObjectItemCaseSensitive(payload, "field_bonus");
+    payload = cJSON_GetObjectItemCaseSensitive(info, "payload");
+
+    name = cJSON_GetArrayItem(payload, 0);
+    current_x = cJSON_GetArrayItem(payload, 1);
+    current_y = cJSON_GetArrayItem(payload, 2);
+    current_session = cJSON_GetArrayItem(payload, 3);
+    direction = cJSON_GetArrayItem(payload, 4);
+    step = cJSON_GetArrayItem(payload, 5);
+    field_type = cJSON_GetArrayItem(payload, 6);
+    field_bonus = cJSON_GetArrayItem(payload, 7);
 
     free(url);
 
-    return current_x;
+    return(field_type); //mozna cokolwiek :) :) :)
 }
 
 cJSON* move(char *token)
@@ -152,7 +151,7 @@ cJSON* move(char *token)
     }
 
     status = cJSON_GetObjectItemCaseSensitive(move, "status");
-    payload = cJSON_GetObjectItemCaseSensitive(status, "payload");
+    payload = cJSON_GetObjectItemCaseSensitive(move, "payload");
     name = cJSON_GetObjectItemCaseSensitive(payload, "name");
     current_x = cJSON_GetObjectItemCaseSensitive(payload, "current_x");
     current_y = cJSON_GetObjectItemCaseSensitive(payload, "current_y");
@@ -199,7 +198,7 @@ cJSON* rotate(char *token, char *rotation)
     }
 
     status = cJSON_GetObjectItemCaseSensitive(rotate, "status");
-    payload = cJSON_GetObjectItemCaseSensitive(status, "payload");
+    payload = cJSON_GetObjectItemCaseSensitive(rotate, "payload");
     name = cJSON_GetObjectItemCaseSensitive(payload, "name");
     current_x = cJSON_GetObjectItemCaseSensitive(payload, "current_x");
     current_y = cJSON_GetObjectItemCaseSensitive(payload, "current_y");
@@ -238,7 +237,7 @@ cJSON* explore(char *token)
     }
 
     status = cJSON_GetObjectItemCaseSensitive(explore, "status");
-    payload = cJSON_GetObjectItemCaseSensitive(status, "payload");
+    payload = cJSON_GetObjectItemCaseSensitive(explore, "payload");
     list = cJSON_GetObjectItemCaseSensitive(payload, "list");
     cJSON_ArrayForEach(element, list){
         cJSON* x = cJSON_GetObjectItemCaseSensitive(element, "x");
@@ -281,7 +280,7 @@ cJSON* reset(char *token)
     }
 
     status = cJSON_GetObjectItemCaseSensitive(reset, "status");
-    payload = cJSON_GetObjectItemCaseSensitive(status, "payload");
+    payload = cJSON_GetObjectItemCaseSensitive(reset, "payload");
     name = cJSON_GetObjectItemCaseSensitive(payload, "name");
     current_x = cJSON_GetObjectItemCaseSensitive(payload, "current_x");
     current_y = cJSON_GetObjectItemCaseSensitive(payload, "current_y");

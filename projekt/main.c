@@ -33,7 +33,10 @@ int main(int argc, char **argv)
             printf("Nie ma takiej komendy\n");
         }
         if(wynik != NULL)
-            cJSON_Print(wynik);   
+        {
+            //printf("%s\n", wynik->valuestring);  //wypisze element struktury cJSON czyli valuestring
+            printf("%s\n", cJSON_Print(wynik)); //wypisze to co jest w cJSONIE wynik jako string
+        } 
     }
 
     return 0;
