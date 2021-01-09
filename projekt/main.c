@@ -4,40 +4,40 @@
 #include "funkcje.h"
 #include "cJSON/cJSON.h"
 
+//null - 0
+//grass - 1
+//sand - 2
+//wall - 3
+
 int main(int argc, char **argv)
 {   
     char *token = argv[1];
-    cJSON* wynik = NULL;
-    for(int i = 2; i < argc; i++){
-        if(strcmp(argv[i], "info") == 0)
-            wynik = info(token);
-        else if(strcmp(argv[i], "move") == 0)
-        {
-            wynik = move(token);
+    Mapa *map = calloc(50*50, sizeof(int));
+    char ruch [32];
+
+    wypisz(map);
+    reset(token, "reset");
+    int x = 0;
+    int y = 0;
+    for(int i = 0; i < 5; i++){
+        fgets(ruch, 32, stdin);
+        if(strcmp(ruch, "rotate left") == 0){
+            rotate(token, "left", "rotate");
         }
-        else if(strcmp(argv[i], "rotate") == 0)
-        {
-            wynik = rotate(token, argv[i + 1]);
-            i++; //dlatego ze rotate ma jeszcze informacje, w ktora strone
+        else if(strcmp(ruch, "rotate right") == 0){
+            rotate(token, "right", "rotate");
         }
-        else if(strcmp(argv[i], "explore") == 0)
-        {
-            wynik = explore(token);
+        else if(strcmp(ruch, "move") == 0){
+            move(token, "move");
         }
-        else if(strcmp(argv[i], "reset") == 0)
-        {
-            wynik = reset(token); //cofa do 1,1 ale kierunek pozostaje
-        }
-        else
-        {
-            printf("Nie ma takiej komendy\n");
-        }
-        if(wynik != NULL)
-        {
-            //printf("%s\n", wynik->valuestring);  //wypisze element struktury cJSON czyli valuestring
-            printf("%s\n", cJSON_Print(wynik)); //wypisze to co jest w cJSONIE wynik jako string
-        } 
+        x = atoi(cJSON_Print(info(token, "x")));
+        y = atoi(cJSON_Print(info(token, "y")));
+        map->field_type[y+23][x+25] = type(cJSON_Print(info(token, "type")));
+        wypisz(map);
+        
+        printf("%s\n", cJSON_Print(info(token, "info")));
     }
+    
 
     return 0;
 }

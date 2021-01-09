@@ -77,7 +77,7 @@ char *make_request(char *url)
     curl_easy_cleanup(curl);
 }
 
-cJSON* info(char *token)
+cJSON* info(char *token, char* co)
 {
     char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/info/")+strlen(token)+1));
     strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/info/");
@@ -119,18 +119,37 @@ cJSON* info(char *token)
 
     free(url);
 
-    return(field_type); //mozna cokolwiek :) :) :)
+    if(strcmp(co, "info") == 0)
+        return info;
+    else if(strcmp(co, "status") == 0)
+        return status;
+    else if(strcmp(co, "payload") == 0)
+        return payload;
+    else if(strcmp(co, "name") == 0)
+        return name;
+    else if(strcmp(co, "x") == 0)
+        return current_x;
+    else if(strcmp(co, "y") == 0)
+        return current_y;
+    else if(strcmp(co, "session") == 0)
+        return current_session;
+    else if(strcmp(co, "direction") == 0)
+        return direction;
+    else if(strcmp(co, "step") == 0)
+        return step;
+    else if(strcmp(co, "type") == 0)
+        return field_type;
+    else if(strcmp(co, "bonus") == 0)
+        return field_bonus;
 }
 
-cJSON* move(char *token)
+cJSON* move(char *token, char* co)
 {
     char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/move/")+strlen(token)+1));
     strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/move/");
     strcat(url, token);
     
-    cJSON *move = NULL;
-    move = cJSON_Parse(make_request(url));
-    
+    cJSON* move = NULL;
     cJSON* status = NULL;
     cJSON* payload = NULL;
     cJSON* name = NULL;
@@ -142,32 +161,54 @@ cJSON* move(char *token)
     cJSON* field_type = NULL;
     cJSON* field_bonus = NULL;
 
+    move = cJSON_Parse(make_request(url));
+
     if(move == NULL){
         const char* error_ptr = cJSON_GetErrorPtr();
         if(error_ptr != NULL){
             printf("Error before: %s\n", error_ptr);
         }
-        goto end;
     }
 
     status = cJSON_GetObjectItemCaseSensitive(move, "status");
     payload = cJSON_GetObjectItemCaseSensitive(move, "payload");
-    name = cJSON_GetObjectItemCaseSensitive(payload, "name");
-    current_x = cJSON_GetObjectItemCaseSensitive(payload, "current_x");
-    current_y = cJSON_GetObjectItemCaseSensitive(payload, "current_y");
-    current_session = cJSON_GetObjectItemCaseSensitive(payload, "current_session");
-    direction = cJSON_GetObjectItemCaseSensitive(payload, "direction");
-    step = cJSON_GetObjectItemCaseSensitive(payload, "step");
-    field_type = cJSON_GetObjectItemCaseSensitive(payload, "field_type");
-    field_bonus = cJSON_GetObjectItemCaseSensitive(payload, "field_bonus");
+
+    name = cJSON_GetArrayItem(payload, 0);
+    current_x = cJSON_GetArrayItem(payload, 1);
+    current_y = cJSON_GetArrayItem(payload, 2);
+    current_session = cJSON_GetArrayItem(payload, 3);
+    direction = cJSON_GetArrayItem(payload, 4);
+    step = cJSON_GetArrayItem(payload, 5);
+    field_type = cJSON_GetArrayItem(payload, 6);
+    field_bonus = cJSON_GetArrayItem(payload, 7);
 
     free(url);
 
-    end:
+    if(strcmp(co, "move") == 0)
         return move;
+    else if(strcmp(co, "status") == 0)
+        return status;
+    else if(strcmp(co, "payload") == 0)
+        return payload;
+    else if(strcmp(co, "name") == 0)
+        return name;
+    else if(strcmp(co, "x") == 0)
+        return current_x;
+    else if(strcmp(co, "y") == 0)
+        return current_y;
+    else if(strcmp(co, "session") == 0)
+        return current_session;
+    else if(strcmp(co, "direction") == 0)
+        return direction;
+    else if(strcmp(co, "step") == 0)
+        return step;
+    else if(strcmp(co, "type") == 0)
+        return field_type;
+    else if(strcmp(co, "bonus") == 0)
+        return field_bonus;
 }
 
-cJSON* rotate(char *token, char *rotation)
+cJSON* rotate(char *token, char *rotation, char* co)
 {
     char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/rotate/")+strlen(token)+strlen(rotation)+2)); //+2 na slasha i \0
     strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/rotate/");
@@ -175,9 +216,7 @@ cJSON* rotate(char *token, char *rotation)
     strcat(url, "/");
     strcat(url, rotation);
 
-    cJSON *rotate = NULL;
-    rotate = cJSON_Parse(make_request(url));
-    
+    cJSON* rotate = NULL;    
     cJSON* status = NULL;
     cJSON* payload = NULL;
     cJSON* name = NULL;
@@ -188,78 +227,115 @@ cJSON* rotate(char *token, char *rotation)
     cJSON* step = NULL;
     cJSON* field_type = NULL;
     cJSON* field_bonus = NULL;
+
+    rotate = cJSON_Parse(make_request(url));
 
     if(rotate == NULL){
         const char* error_ptr = cJSON_GetErrorPtr();
         if(error_ptr != NULL){
             printf("Error before: %s\n", error_ptr);
         }
-        goto end;
     }
 
     status = cJSON_GetObjectItemCaseSensitive(rotate, "status");
     payload = cJSON_GetObjectItemCaseSensitive(rotate, "payload");
-    name = cJSON_GetObjectItemCaseSensitive(payload, "name");
-    current_x = cJSON_GetObjectItemCaseSensitive(payload, "current_x");
-    current_y = cJSON_GetObjectItemCaseSensitive(payload, "current_y");
-    current_session = cJSON_GetObjectItemCaseSensitive(payload, "current_session");
-    direction = cJSON_GetObjectItemCaseSensitive(payload, "direction");
-    step = cJSON_GetObjectItemCaseSensitive(payload, "step");
-    field_type = cJSON_GetObjectItemCaseSensitive(payload, "field_type");
-    field_bonus = cJSON_GetObjectItemCaseSensitive(payload, "field_bonus");
+
+    name = cJSON_GetArrayItem(payload, 0);
+    current_x = cJSON_GetArrayItem(payload, 1);
+    current_y = cJSON_GetArrayItem(payload, 2);
+    current_session = cJSON_GetArrayItem(payload, 3);
+    direction = cJSON_GetArrayItem(payload, 4);
+    step = cJSON_GetArrayItem(payload, 5);
+    field_type = cJSON_GetArrayItem(payload, 6);
+    field_bonus = cJSON_GetArrayItem(payload, 7);
 
     free(url);
 
-    end:
+    if(strcmp(co, "rotate") == 0)
         return rotate;
+    else if(strcmp(co, "status") == 0)
+        return status;
+    else if(strcmp(co, "payload") == 0)
+        return payload;
+    else if(strcmp(co, "name") == 0)
+        return name;
+    else if(strcmp(co, "x") == 0)
+        return current_x;
+    else if(strcmp(co, "y") == 0)
+        return current_y;
+    else if(strcmp(co, "session") == 0)
+        return current_session;
+    else if(strcmp(co, "direction") == 0)
+        return direction;
+    else if(strcmp(co, "step") == 0)
+        return step;
+    else if(strcmp(co, "type") == 0)
+        return field_type;
+    else if(strcmp(co, "bonus") == 0)
+        return field_bonus;
 }
 
-cJSON* explore(char *token)
+cJSON* explore(char *token, char* co)
 {
     char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/explore/")+strlen(token)+1));
     strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/explore/");
     strcat(url, token);
 
-    cJSON *explore = NULL;
-    explore = cJSON_Parse(make_request(url));
-    
+    cJSON* explore = NULL;    
     cJSON* status = NULL;
     cJSON* payload = NULL;
     cJSON* list = NULL;
     cJSON* element = NULL;
+    cJSON* x = NULL;
+    cJSON* y = NULL;
+    cJSON* type = NULL;
+    cJSON* list0 = NULL;
+    cJSON* list1 = NULL;
+    cJSON* list2 = NULL;
+    
+    explore = cJSON_Parse(make_request(url));
 
     if(explore == NULL){
         const char* error_ptr = cJSON_GetErrorPtr();
         if(error_ptr != NULL){
             printf("Error before: %s\n", error_ptr);
         }
-        goto end;
     }
 
     status = cJSON_GetObjectItemCaseSensitive(explore, "status");
     payload = cJSON_GetObjectItemCaseSensitive(explore, "payload");
-    list = cJSON_GetObjectItemCaseSensitive(payload, "list");
-    cJSON_ArrayForEach(element, list){
-        cJSON* x = cJSON_GetObjectItemCaseSensitive(element, "x");
-        cJSON* y = cJSON_GetObjectItemCaseSensitive(element, "y");
-        cJSON* type = cJSON_GetObjectItemCaseSensitive(element, "type");
-    }
+    list = cJSON_GetArrayItem(payload, 0);
+    list0 = cJSON_GetArrayItem(list, 0);
+    list1 = cJSON_GetArrayItem(list, 1);
+    list2 = cJSON_GetArrayItem(list, 2);
 
     free(url);
 
-    end:
+    printf("%s\n", cJSON_Print(list));
+
+    if(strcmp(co, "explore") == 0)
         return explore;
+    else if(strcmp(co, "status") == 0)
+        return status;
+    else if(strcmp(co, "payload") == 0)
+        return payload;
+    else if(strcmp(co, "list") == 0)
+        return list;
+    else if(strcmp(co, "list0") == 0)
+        return list0;
+    else if(strcmp(co, "list1") == 0)
+        return list1;
+    else if(strcmp(co, "list2") == 0)
+        return list2;
 }
 
-cJSON* reset(char *token)
+cJSON* reset(char *token, char* co)
 {
     char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/reset/")+strlen(token)+1));
     strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/reset/");
     strcat(url, token);
 
-    cJSON *reset = NULL;
-    reset = cJSON_Parse(make_request(url));
-    
+    cJSON* reset = NULL;    
     cJSON* status = NULL;
     cJSON* payload = NULL;
     cJSON* name = NULL;
@@ -270,28 +346,93 @@ cJSON* reset(char *token)
     cJSON* step = NULL;
     cJSON* field_type = NULL;
     cJSON* field_bonus = NULL;
+    
+    reset = cJSON_Parse(make_request(url));
 
     if(reset == NULL){
         const char* error_ptr = cJSON_GetErrorPtr();
         if(error_ptr != NULL){
             printf("Error before: %s\n", error_ptr);
         }
-        goto end;
     }
 
     status = cJSON_GetObjectItemCaseSensitive(reset, "status");
     payload = cJSON_GetObjectItemCaseSensitive(reset, "payload");
-    name = cJSON_GetObjectItemCaseSensitive(payload, "name");
-    current_x = cJSON_GetObjectItemCaseSensitive(payload, "current_x");
-    current_y = cJSON_GetObjectItemCaseSensitive(payload, "current_y");
-    current_session = cJSON_GetObjectItemCaseSensitive(payload, "current_session");
-    direction = cJSON_GetObjectItemCaseSensitive(payload, "direction");
-    step = cJSON_GetObjectItemCaseSensitive(payload, "step");
-    field_type = cJSON_GetObjectItemCaseSensitive(payload, "field_type");
-    field_bonus = cJSON_GetObjectItemCaseSensitive(payload, "field_bonus");
+
+    name = cJSON_GetArrayItem(payload, 0);
+    current_x = cJSON_GetArrayItem(payload, 1);
+    current_y = cJSON_GetArrayItem(payload, 2);
+    current_session = cJSON_GetArrayItem(payload, 3);
+    direction = cJSON_GetArrayItem(payload, 4);
+    step = cJSON_GetArrayItem(payload, 5);
+    field_type = cJSON_GetArrayItem(payload, 6);
+    field_bonus = cJSON_GetArrayItem(payload, 7);
 
     free(url);
 
-    end:
+    if(strcmp(co, "reset") == 0)
         return reset;
+    else if(strcmp(co, "status") == 0)
+        return status;
+    else if(strcmp(co, "payload") == 0)
+        return payload;
+    else if(strcmp(co, "name") == 0)
+        return name;
+    else if(strcmp(co, "x") == 0)
+        return current_x;
+    else if(strcmp(co, "y") == 0)
+        return current_y;
+    else if(strcmp(co, "session") == 0)
+        return current_session;
+    else if(strcmp(co, "direction") == 0)
+        return direction;
+    else if(strcmp(co, "step") == 0)
+        return step;
+    else if(strcmp(co, "type") == 0)
+        return field_type;
+    else if(strcmp(co, "bonus") == 0)
+        return field_bonus;
+}
+
+void wypisz(Mapa *A){
+    printf("  ");
+    for(int j = 0; j < 50; j++){
+            printf("%4d", j-25); //wypisuje nr kolumny
+    }
+    printf("\n");
+    for(int i = 0; i < 50; i++){
+        printf("   ");
+        for(int j = 0; j < 50; j++){
+            printf("+---"); //wypisuje rozdzielenie miedzy wierszami
+        }
+        printf("+\n%3d", 25-i); //wypisuje numer wiersza
+        for(int j = 0; j < 50; j++){
+            if(A->field_type[i][j] != 0){
+                printf("|%2d ", A->field_type[i][j]);
+            }
+            else{
+                printf("|");
+                printf(" 0 ");
+            }
+        }
+        printf("|\n");
+    }
+    printf("  ");
+    for(int j = 0; j < 50; j++){
+        printf("+---"); //wypisuje rozdzielenie miedzy wierszami
+    }
+    printf("+\n\n");
+}
+
+int type(char* nazwa){
+    if(strcmp(nazwa, "\"grass\"") == 0){
+        return 1;
+    }
+    else if(strcmp(nazwa, "\"sand\"") == 0){
+        return 2;
+    }
+    else if(strcmp(nazwa, "\"wall\"") == 0){
+        return 3;
+    }
+    else return -1;
 }
