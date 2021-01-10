@@ -2,8 +2,11 @@
 #include <stdlib.h>
 #include "cJSON/cJSON.h"
 
-#define ANSI_COLOR_RED "\x1b[31m"
-#define ANSI_COLOR_RESET "\x1b[37m"
+#define ANSI_COLOR_CYAN "\x1b[36m"
+#define ANSI_COLOR_RED "\x1b[31;1m"
+#define ANSI_COLOR_RESET "\x1b[37;1m"
+#define ANSI_COLOR_GRASS "\x1b[32;1m"
+#define ANSI_COLOR_SAND "\x1b[33;1m"
 
 typedef struct _Memory
 {
@@ -14,7 +17,7 @@ typedef struct _Memory
 typedef struct _Mapa
 {
     int field_type [50][50];
-    int step;
+    int step, x, y; //current_x i current_y
 } Mapa;
 
 typedef struct _Response{
@@ -46,5 +49,5 @@ Response* move(char *token);
 Response* rotate(char *token, char *rotation);
 Lista* exploruj(char *token);
 Response* reset(char *token);
-void wypisz(Mapa *A, int x, int y);
+void wypisz(Mapa *A);
 int type(char* nazwa);

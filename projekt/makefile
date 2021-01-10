@@ -1,7 +1,7 @@
 all:
 	cc main.c funkcje.c -o wykonaj -lcurl cJSON/cJSON.o  
 
-run:
+test:
 	./wykonaj qwerty_29
 
 memory:
