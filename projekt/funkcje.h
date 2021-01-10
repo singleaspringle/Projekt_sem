@@ -14,6 +14,7 @@ typedef struct _Memory
 typedef struct _Mapa
 {
     int field_type [50][50];
+    int step;
 } Mapa;
 
 typedef struct _Response{
@@ -27,12 +28,23 @@ typedef struct _Response{
     char* field_bonus;
 } Response;
 
+typedef struct _Pole{
+    int x, y;
+    char *field_type;
+} Pole;
+
+typedef struct _Lista {
+    Pole* l1;
+    Pole* l2;
+    Pole* l3; //potrzebne do explore
+} Lista;
+
 static size_t write_callback(void *data, size_t size, size_t nmemb, void *userp);
 char *make_request(char *url);
 Response* info(char *token);
 Response* move(char *token);
 Response* rotate(char *token, char *rotation);
-cJSON* explore(char *token, char* co);
+Lista* exploruj(char *token);
 Response* reset(char *token);
 void wypisz(Mapa *A, int x, int y);
 int type(char* nazwa);

@@ -281,7 +281,7 @@ Response* rotate(char *token, char *rotation)
     return wynik;
 }
 
-cJSON* explore(char *token, char* co)
+Lista* exploruj(char *token)
 {
     char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/explore/")+strlen(token)+1));
     strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/explore/");
@@ -295,9 +295,13 @@ cJSON* explore(char *token, char* co)
     cJSON* x = NULL;
     cJSON* y = NULL;
     cJSON* type = NULL;
-    cJSON* list0 = NULL;
     cJSON* list1 = NULL;
     cJSON* list2 = NULL;
+    cJSON* list3 = NULL;
+    Lista* wynik = (Lista*) malloc(sizeof(Lista));
+    wynik->l1 = (Pole*) malloc(sizeof(Pole));
+    wynik->l2 = (Pole*) malloc(sizeof(Pole));
+    wynik->l3 = (Pole*) malloc(sizeof(Pole));
     
     explore = cJSON_Parse(make_request(url));
 
@@ -309,32 +313,27 @@ cJSON* explore(char *token, char* co)
     }
 
     status = cJSON_GetObjectItemCaseSensitive(explore, "status");
-    if (strcmp(cJSON_Print(status), "\"Success\"") != 0)
-        return status;
     payload = cJSON_GetObjectItemCaseSensitive(explore, "payload");
+
     list = cJSON_GetArrayItem(payload, 0);
-    list0 = cJSON_GetArrayItem(list, 0);
-    list1 = cJSON_GetArrayItem(list, 1);
-    list2 = cJSON_GetArrayItem(list, 2);
+
+    list1 = cJSON_GetArrayItem(list, 0);
+    wynik->l1->x = atoi(cJSON_Print(list1->child));
+    wynik->l1->y = atoi(cJSON_Print(list1->child->next));
+    wynik->l1->field_type = cJSON_Print(list1->child->next->next);
+    
+    list2 = cJSON_GetArrayItem(list, 1); 
+    wynik->l2->x = atoi(cJSON_Print(list2->child));
+    wynik->l2->y = atoi(cJSON_Print(list2->child->next));
+    wynik->l2->field_type = cJSON_Print(list2->child->next->next);
+
+    list3 = cJSON_GetArrayItem(list, 2);
+    wynik->l3->x = atoi(cJSON_Print(list3->child));
+    wynik->l3->y = atoi(cJSON_Print(list3->child->next));
+    wynik->l3->field_type = cJSON_Print(list3->child->next->next);
 
     free(url);
-
-    printf("%s\n", cJSON_Print(list));
-
-    if(strcmp(co, "explore") == 0)
-        return explore;
-    else if(strcmp(co, "status") == 0)
-        return status;
-    else if(strcmp(co, "payload") == 0)
-        return payload;
-    else if(strcmp(co, "list") == 0) //chyba tylko to bedziemy zwracac
-        return list;
-    else if(strcmp(co, "list0") == 0)
-        return list0;
-    else if(strcmp(co, "list1") == 0)
-        return list1;
-    else if(strcmp(co, "list2") == 0)
-        return list2;
+    return wynik;
 }
 
 Response* reset(char *token)
