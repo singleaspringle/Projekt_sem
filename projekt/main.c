@@ -51,8 +51,6 @@ int main(int argc, char **argv)
             explore = exploruj(token);
         }
         
-        //response = info(token); //teraz dzieki tej strukturze Response zapisuje wszystkie dane za jednym wywołaniem funkcji info i nie mam zbędnych stepów
-        
         if(strcmp(ruch, "explore") != 0){
             map->x = response->x;
             map->y = response->y;
@@ -61,6 +59,9 @@ int main(int argc, char **argv)
 
             wypisz(map); //podswietla na czerwono pozycje na ktorej sie znajdujemy
             printf("x: %d\ny: %d\ndirection: %s\nstep: %d\n", map->x, map->y, response->direction, map->step);
+
+            
+            //clean_response(response);
         }
         else{
             map->step ++;

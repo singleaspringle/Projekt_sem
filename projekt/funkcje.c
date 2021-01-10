@@ -77,6 +77,17 @@ char *make_request(char *url)
     curl_easy_cleanup(curl);
 }
 
+void clean_response (Response *dana)
+{
+    free (dana->status);
+    free (dana->name);
+    free (dana->session);
+    free (dana->direction);
+    free (dana->field_type);
+    free (dana->field_bonus);
+    free (dana);
+}
+
 Response* info(char *token)
 {
     char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/info/")+strlen(token)+1));
@@ -142,6 +153,17 @@ Response* info(char *token)
     strcpy(wynik->field_bonus, cJSON_Print(field_bonus));
 
     free(url);
+    // cJSON_free(field_bonus);
+    // cJSON_free(field_type);
+    // cJSON_free(step);
+    // cJSON_free(direction);
+    // cJSON_free(current_session);
+    // cJSON_free(current_y);
+    // cJSON_free(current_x);
+    // cJSON_free(name);
+    // cJSON_free(payload);
+    // cJSON_free(status);
+    //cJSON_Delete(info);
     return wynik;
 }
 
@@ -209,6 +231,19 @@ Response* move(char *token)
     strcpy(wynik->field_bonus, cJSON_Print(field_bonus));
 
     free(url);
+    // cJSON_free(field_bonus);
+    // cJSON_free(field_type);
+    // cJSON_free(step);
+    // cJSON_free(direction);
+    // cJSON_free(current_session);
+    // cJSON_free(current_y);
+    // cJSON_free(current_x);
+    // cJSON_free(name);
+    // cJSON_free(payload);
+    // cJSON_free(status);
+    // cJSON_free(move);
+    // free(wynik);
+    //cJSON_Delete(move);
     return wynik;
 }
 
@@ -278,6 +313,18 @@ Response* rotate(char *token, char *rotation)
     strcpy(wynik->field_bonus, cJSON_Print(field_bonus));
 
     free(url);
+    // cJSON_free(field_bonus);
+    // cJSON_free(field_type);
+    // cJSON_free(step);
+    // cJSON_free(direction);
+    // cJSON_free(current_session);
+    // cJSON_free(current_y);
+    // cJSON_free(current_x);
+    // cJSON_free(name);
+    // cJSON_free(payload);
+    // cJSON_free(status);
+    // free(wynik);
+    //cJSON_Delete(rotate);
     return wynik;
 }
 
@@ -291,10 +338,6 @@ Lista* exploruj(char *token)
     cJSON* status = NULL;
     cJSON* payload = NULL;
     cJSON* list = NULL;
-    cJSON* element = NULL;
-    cJSON* x = NULL;
-    cJSON* y = NULL;
-    cJSON* type = NULL;
     cJSON* list1 = NULL;
     cJSON* list2 = NULL;
     cJSON* list3 = NULL;
@@ -333,6 +376,23 @@ Lista* exploruj(char *token)
     wynik->l3->field_type = cJSON_Print(list3->child->next->next);
 
     free(url);
+    // cJSON_free(list3->child->next->next);
+    // cJSON_free(list3->child->next);
+    // cJSON_free(list3->child);
+    // cJSON_free(list3);
+    // cJSON_free(list2->child->next->next);
+    // cJSON_free(list2->child->next);
+    // cJSON_free(list2->child);
+    // cJSON_free(list2);
+    // cJSON_free(list1->child->next->next);
+    // cJSON_free(list1->child->next);
+    // cJSON_free(list1->child);
+    // cJSON_free(list1);
+    // cJSON_free(list);
+    // cJSON_free(status);
+    // cJSON_free(payload);
+    // free(wynik);
+    //cJSON_Delete(explore);
     return wynik;
 }
 
@@ -400,6 +460,18 @@ Response* reset(char *token)
     strcpy(wynik->field_bonus, cJSON_Print(field_bonus));
 
     free(url);
+    // cJSON_free(field_bonus);
+    // cJSON_free(field_type);
+    // cJSON_free(step);
+    // cJSON_free(direction);
+    // cJSON_free(current_session);
+    // cJSON_free(current_y);
+    // cJSON_free(current_x);
+    // cJSON_free(name);
+    // cJSON_free(payload);
+    // cJSON_free(status);
+    // free(wynik);
+    //cJSON_Delete(reset);
     return wynik;
 }
 

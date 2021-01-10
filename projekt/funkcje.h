@@ -51,3 +51,4 @@ Lista* exploruj(char *token);
 Response* reset(char *token);
 void wypisz(Mapa *A);
 int type(char* nazwa);
+void clean_response (Response *dana);
