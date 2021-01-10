@@ -5,4 +5,4 @@ test:
 	./wykonaj qwerty_29
 
 memory:
-	valgrind ./wykonaj qwerty_29
+	valgrind --leak-check=full ./wykonaj qwerty_29
