@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include "cJSON/cJSON.h"
 
+#define ANSI_COLOR_RED "\x1b[31m"
+#define ANSI_COLOR_RESET "\x1b[37m"
+
 typedef struct _Memory
 {
     char *response;
@@ -27,9 +30,9 @@ typedef struct _Response{
 static size_t write_callback(void *data, size_t size, size_t nmemb, void *userp);
 char *make_request(char *url);
 Response* info(char *token);
-cJSON* move(char *token, char* co);
-cJSON* rotate(char *token, char *rotation, char* co);
+Response* move(char *token);
+Response* rotate(char *token, char *rotation);
 cJSON* explore(char *token, char* co);
-cJSON* reset(char *token, char* co);
-void wypisz(Mapa *A);
+Response* reset(char *token);
+void wypisz(Mapa *A, int x, int y);
 int type(char* nazwa);

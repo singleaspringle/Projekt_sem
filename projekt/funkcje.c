@@ -145,12 +145,13 @@ Response* info(char *token)
     return wynik;
 }
 
-cJSON* move(char *token, char* co)
+Response* move(char *token)
 {
     char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/move/")+strlen(token)+1));
     strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/move/");
     strcat(url, token);
     
+    Response* wynik = calloc(1, sizeof(Response));
     cJSON* move = NULL;
     cJSON* status = NULL;
     cJSON* payload = NULL;
@@ -173,44 +174,45 @@ cJSON* move(char *token, char* co)
     }
 
     status = cJSON_GetObjectItemCaseSensitive(move, "status");
+    wynik->status = malloc(sizeof(char)*(strlen(cJSON_Print(status)) + 1));
+    strcpy(wynik->status, cJSON_Print(status));
+
     payload = cJSON_GetObjectItemCaseSensitive(move, "payload");
 
     name = cJSON_GetArrayItem(payload, 0);
+    wynik->name = malloc(sizeof(char)*(strlen(cJSON_Print(name)) + 1));
+    strcpy(wynik->name, cJSON_Print(name));
+
     current_x = cJSON_GetArrayItem(payload, 1);
+    wynik->x = atoi(cJSON_Print(current_x));
+
     current_y = cJSON_GetArrayItem(payload, 2);
+    wynik->y = atoi(cJSON_Print(current_y));
+
     current_session = cJSON_GetArrayItem(payload, 3);
+    wynik->session = malloc(sizeof(char)*(strlen(cJSON_Print(current_session)) + 1));
+    strcpy(wynik->session, cJSON_Print(current_session));
+
     direction = cJSON_GetArrayItem(payload, 4);
+    wynik->direction = malloc(sizeof(char)*(strlen(cJSON_Print(direction)) + 1));
+    strcpy(wynik->direction, cJSON_Print(direction));
+
     step = cJSON_GetArrayItem(payload, 5);
+    wynik->step = atoi(cJSON_Print(step));
+
     field_type = cJSON_GetArrayItem(payload, 6);
+    wynik->field_type = malloc(sizeof(char)*(strlen(cJSON_Print(field_type)) + 1));
+    strcpy(wynik->field_type, cJSON_Print(field_type));
+
     field_bonus = cJSON_GetArrayItem(payload, 7);
+    wynik->field_bonus = malloc(sizeof(char)*(strlen(cJSON_Print(field_bonus)) + 1));
+    strcpy(wynik->field_bonus, cJSON_Print(field_bonus));
 
     free(url);
-
-    if(strcmp(co, "move") == 0)
-        return move;
-    else if(strcmp(co, "status") == 0)
-        return status;
-    else if(strcmp(co, "payload") == 0)
-        return payload;
-    else if(strcmp(co, "name") == 0)
-        return name;
-    else if(strcmp(co, "x") == 0)
-        return current_x;
-    else if(strcmp(co, "y") == 0)
-        return current_y;
-    else if(strcmp(co, "session") == 0)
-        return current_session;
-    else if(strcmp(co, "direction") == 0)
-        return direction;
-    else if(strcmp(co, "step") == 0)
-        return step;
-    else if(strcmp(co, "type") == 0)
-        return field_type;
-    else if(strcmp(co, "bonus") == 0)
-        return field_bonus;
+    return wynik;
 }
 
-cJSON* rotate(char *token, char *rotation, char* co)
+Response* rotate(char *token, char *rotation)
 {
     char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/rotate/")+strlen(token)+strlen(rotation)+2)); //+2 na slasha i \0
     strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/rotate/");
@@ -218,6 +220,7 @@ cJSON* rotate(char *token, char *rotation, char* co)
     strcat(url, "/");
     strcat(url, rotation);
 
+    Response* wynik = calloc(1, sizeof(Response));
     cJSON* rotate = NULL;    
     cJSON* status = NULL;
     cJSON* payload = NULL;
@@ -240,41 +243,42 @@ cJSON* rotate(char *token, char *rotation, char* co)
     }
 
     status = cJSON_GetObjectItemCaseSensitive(rotate, "status");
+    wynik->status = malloc(sizeof(char)*(strlen(cJSON_Print(status)) + 1));
+    strcpy(wynik->status, cJSON_Print(status));
+
     payload = cJSON_GetObjectItemCaseSensitive(rotate, "payload");
 
     name = cJSON_GetArrayItem(payload, 0);
+    wynik->name = malloc(sizeof(char)*(strlen(cJSON_Print(name)) + 1));
+    strcpy(wynik->name, cJSON_Print(name));
+
     current_x = cJSON_GetArrayItem(payload, 1);
+    wynik->x = atoi(cJSON_Print(current_x));
+
     current_y = cJSON_GetArrayItem(payload, 2);
+    wynik->y = atoi(cJSON_Print(current_y));
+
     current_session = cJSON_GetArrayItem(payload, 3);
+    wynik->session = malloc(sizeof(char)*(strlen(cJSON_Print(current_session)) + 1));
+    strcpy(wynik->session, cJSON_Print(current_session));
+
     direction = cJSON_GetArrayItem(payload, 4);
+    wynik->direction = malloc(sizeof(char)*(strlen(cJSON_Print(direction)) + 1));
+    strcpy(wynik->direction, cJSON_Print(direction));
+
     step = cJSON_GetArrayItem(payload, 5);
+    wynik->step = atoi(cJSON_Print(step));
+
     field_type = cJSON_GetArrayItem(payload, 6);
+    wynik->field_type = malloc(sizeof(char)*(strlen(cJSON_Print(field_type)) + 1));
+    strcpy(wynik->field_type, cJSON_Print(field_type));
+
     field_bonus = cJSON_GetArrayItem(payload, 7);
+    wynik->field_bonus = malloc(sizeof(char)*(strlen(cJSON_Print(field_bonus)) + 1));
+    strcpy(wynik->field_bonus, cJSON_Print(field_bonus));
 
     free(url);
-
-    if(strcmp(co, "rotate") == 0)
-        return rotate;
-    else if(strcmp(co, "status") == 0)
-        return status;
-    else if(strcmp(co, "payload") == 0)
-        return payload;
-    else if(strcmp(co, "name") == 0)
-        return name;
-    else if(strcmp(co, "x") == 0)
-        return current_x;
-    else if(strcmp(co, "y") == 0)
-        return current_y;
-    else if(strcmp(co, "session") == 0)
-        return current_session;
-    else if(strcmp(co, "direction") == 0)
-        return direction;
-    else if(strcmp(co, "step") == 0)
-        return step;
-    else if(strcmp(co, "type") == 0)
-        return field_type;
-    else if(strcmp(co, "bonus") == 0)
-        return field_bonus;
+    return wynik;
 }
 
 cJSON* explore(char *token, char* co)
@@ -333,12 +337,13 @@ cJSON* explore(char *token, char* co)
         return list2;
 }
 
-cJSON* reset(char *token, char* co)
+Response* reset(char *token)
 {
     char *url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/reset/")+strlen(token)+1));
     strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/reset/");
     strcat(url, token);
 
+    Response* wynik = calloc(1, sizeof(Response));
     cJSON* reset = NULL;    
     cJSON* status = NULL;
     cJSON* payload = NULL;
@@ -361,44 +366,45 @@ cJSON* reset(char *token, char* co)
     }
 
     status = cJSON_GetObjectItemCaseSensitive(reset, "status");
+    wynik->status = malloc(sizeof(char)*(strlen(cJSON_Print(status)) + 1));
+    strcpy(wynik->status, cJSON_Print(status));
+
     payload = cJSON_GetObjectItemCaseSensitive(reset, "payload");
 
     name = cJSON_GetArrayItem(payload, 0);
+    wynik->name = malloc(sizeof(char)*(strlen(cJSON_Print(name)) + 1));
+    strcpy(wynik->name, cJSON_Print(name));
+
     current_x = cJSON_GetArrayItem(payload, 1);
+    wynik->x = atoi(cJSON_Print(current_x));
+
     current_y = cJSON_GetArrayItem(payload, 2);
+    wynik->y = atoi(cJSON_Print(current_y));
+
     current_session = cJSON_GetArrayItem(payload, 3);
+    wynik->session = malloc(sizeof(char)*(strlen(cJSON_Print(current_session)) + 1));
+    strcpy(wynik->session, cJSON_Print(current_session));
+
     direction = cJSON_GetArrayItem(payload, 4);
+    wynik->direction = malloc(sizeof(char)*(strlen(cJSON_Print(direction)) + 1));
+    strcpy(wynik->direction, cJSON_Print(direction));
+
     step = cJSON_GetArrayItem(payload, 5);
+    wynik->step = atoi(cJSON_Print(step));
+
     field_type = cJSON_GetArrayItem(payload, 6);
+    wynik->field_type = malloc(sizeof(char)*(strlen(cJSON_Print(field_type)) + 1));
+    strcpy(wynik->field_type, cJSON_Print(field_type));
+
     field_bonus = cJSON_GetArrayItem(payload, 7);
+    wynik->field_bonus = malloc(sizeof(char)*(strlen(cJSON_Print(field_bonus)) + 1));
+    strcpy(wynik->field_bonus, cJSON_Print(field_bonus));
 
     free(url);
-
-    if(strcmp(co, "reset") == 0)
-        return reset;
-    else if(strcmp(co, "status") == 0)
-        return status;
-    else if(strcmp(co, "payload") == 0)
-        return payload;
-    else if(strcmp(co, "name") == 0)
-        return name;
-    else if(strcmp(co, "x") == 0)
-        return current_x;
-    else if(strcmp(co, "y") == 0)
-        return current_y;
-    else if(strcmp(co, "session") == 0)
-        return current_session;
-    else if(strcmp(co, "direction") == 0)
-        return direction;
-    else if(strcmp(co, "step") == 0)
-        return step;
-    else if(strcmp(co, "type") == 0)
-        return field_type;
-    else if(strcmp(co, "bonus") == 0)
-        return field_bonus;
+    return wynik;
 }
 
-void wypisz(Mapa *A){
+void wypisz(Mapa *A, int x, int y){
     printf("  ");
     for(int j = 0; j < 50; j++){
             printf("%4d", j-25); //wypisuje nr kolumny
@@ -411,13 +417,17 @@ void wypisz(Mapa *A){
         }
         printf("+\n%3d", 25-i); //wypisuje numer wiersza
         for(int j = 0; j < 50; j++){
-            if(A->field_type[i][j] != 0){
+            if(25 - y == i && x + 25 == j){
+                printf("|");
+                printf(ANSI_COLOR_RED);
+                printf("%2d ", A->field_type[i][j]);
+                printf(ANSI_COLOR_RESET);
+            }
+            else
+            {
                 printf("|%2d ", A->field_type[i][j]);
             }
-            else{
-                printf("|");
-                printf(" 0 ");
-            }
+            
         }
         printf("|\n");
     }
