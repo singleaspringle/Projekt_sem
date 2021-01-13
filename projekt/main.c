@@ -1,9 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "funkcje.h"
-#include "cJSON/cJSON.h"
-
+#include "load.h"
 //NAPRAWIC PRZECIEKI PAMIECI!!!!!!!!!!
 
 //null - 0

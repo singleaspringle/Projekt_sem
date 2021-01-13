@@ -1,5 +1,5 @@
 all:
-	cc main.c funkcje.c -o wykonaj -lcurl cJSON/cJSON.o  
+	cc main.c load.c response.c list.c map.c -o wykonaj -lcurl cJSON/cJSON.o  
 
 test:
 	./wykonaj qwerty_29
