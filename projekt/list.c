@@ -1,13 +1,13 @@
 #include "list.h"
 
 int type(char* nazwa){
-    if(strcmp(nazwa, "\"grass\"") == 0){
+    if(strcmp(nazwa, "grass") == 0){
         return 1;
     }
-    else if(strcmp(nazwa, "\"sand\"") == 0){
+    else if(strcmp(nazwa, "sand") == 0){
         return 2;
     }
-    else if(strcmp(nazwa, "\"wall\"") == 0){
+    else if(strcmp(nazwa, "wall") == 0){
         return 3;
     }
     else return -1;

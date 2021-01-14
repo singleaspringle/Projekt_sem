@@ -1,5 +1,4 @@
 #include "load.h"
-//NAPRAWIC PRZECIEKI PAMIECI!!!!!!!!!!
 
 //null - 0
 //grass - 1
@@ -15,7 +14,7 @@ int main(int argc, char **argv)
     char ruch [30];
 
     wypisz(map);
-    Response* response = NULL;
+    Response* response;
     Lista* explore = NULL;
     Pole* p1 = NULL;
     Pole* p2 = NULL;
@@ -25,23 +24,13 @@ int main(int argc, char **argv)
         fgets(ruch, 30, stdin);
         strcpy(ruch, strtok(ruch, "\n"));
 
-        if(strcmp(ruch, "move") == 0){
-            response = move(token);
-        }
-        else if(strcmp(ruch, "rotate_right") == 0){
-            response = rotate(token, "right");
-        }
-        else if(strcmp(ruch, "rotate_left") == 0){
-            response = rotate(token, "left");
-        }
-        else if(strcmp(ruch, "reset") == 0){
-            response = reset(token); //wraca czolga do (1, 1) i zeruje zapisane pola
+        response = get_struct(token, ruch);
+
+        if(strcmp(ruch, "reset") == 0){
             free(map);
-            Mapa *map = calloc(50*50, sizeof(int)); //alokuje 50x50 na mape i wpisuje zera
+            Mapa *map = calloc(1, sizeof(Mapa));
         }
-        else if(strcmp(ruch, "info") == 0){
-            response = info(token);
-        }
+
         else if(strcmp(ruch, "explore") == 0){
             explore = exploruj(token);
         }
@@ -51,9 +40,10 @@ int main(int argc, char **argv)
             map->y = response->y;
             map->field_type[25-(map->y)][(map->x)+25] = type(response->field_type);
             map->step = response->step;
+            map->direction = response->direction;
 
             wypisz(map); //podswietla na czerwono pozycje na ktorej sie znajdujemy
-            printf("x: %d\ny: %d\ndirection: %s\nstep: %d\n", map->x, map->y, response->direction, map->step);
+            printf("x: %d\ny: %d\ndirection: %s\nstep: %d\n", map->x, map->y, map->direction, map->step);
 
             
             //clean_response(response);

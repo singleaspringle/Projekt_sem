@@ -13,11 +13,7 @@ typedef struct _Response{
     char* field_bonus;
 } Response;
 
-
-Response* reset(char *token);
-Response* info(char *token);
-Response* move(char *token);
-Response* rotate(char *token, char *rotation);
 void clean_response (Response *dana);
+Response* get_struct(char* token, char *command);
 
 #endif

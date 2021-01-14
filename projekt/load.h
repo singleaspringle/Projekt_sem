@@ -24,6 +24,7 @@ typedef struct _Memory
 
 static size_t write_callback(void *data, size_t size, size_t nmemb, void *userp);
 char *make_request(char *url);
+char* get_request(char* token, char* command);
 
 
 #endif

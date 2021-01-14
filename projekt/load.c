@@ -72,6 +72,35 @@ char *make_request(char *url)
     curl_easy_cleanup(curl);
 }
 
+char* get_request(char* token, char* command){
+    char* url;
+    if(strcmp(command, "rotate_left") != 0 && strcmp(command, "rotate_right") != 0){
+        url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/") + strlen(command) + 1 + strlen(token) + 1));
+        strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/");
+        strcat(url, command);
+        strcat(url, "/");
+        strcat(url, token);
+    }
+    else if(strcmp(command, "rotate_left") == 0){
+        url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/rotate/left/") + strlen(token) + 1));
+        strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/rotate/");
+        strcat(url, token);
+        strcat(url, "/");
+        strcat(url, "left");
+    }
+    else if(strcmp(command, "rotate_right") == 0){
+        url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/rotate/right/") + strlen(token) + 1));
+        strcpy(url, "http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/rotate/");
+        strcat(url, token);
+        strcat(url, "/");
+        strcat(url, "right");
+    }
+
+    char* response = make_request(url);
+    
+    free(url);
+    return response;
+}
 
 
 
