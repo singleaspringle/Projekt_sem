@@ -1,5 +1,6 @@
 #include "map.h"
-void wypisz(Mapa *A){
+
+void wypisz(Map *A){
     printf(ANSI_COLOR_RESET);
     printf("  ");
     for(int j = 0; j < 50; j++){

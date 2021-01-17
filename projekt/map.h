@@ -2,14 +2,14 @@
 #define _MAP_H
 #include "load.h"
 
-typedef struct _Mapa
+typedef struct _Map
 {
     int field_type [50][50];
     int step, x, y; //current_x i current_y
     char* direction;
     int dx, dy;
-} Mapa;
+} Map;
 
-void wypisz(Mapa *A);
+void wypisz(Map *A);
 
 #endif
