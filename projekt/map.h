@@ -4,12 +4,15 @@
 
 typedef struct _Map
 {
-    int field_type [50][50];
-    int step, x, y; //current_x i current_y
+    int r, c;
+    int **field_type;
+    int step, x, y; //lokalne x i y
     char* direction;
     int dx, dy;
 } Map;
 
-void wypisz(Map *A);
+void print_map(Map *A);
+Map* create_map(int r, int c);
+void powieksz_mape(Map* A);
 
 #endif

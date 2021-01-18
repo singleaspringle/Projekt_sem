@@ -11,12 +11,11 @@
 int main(int argc, char **argv)
 {   
     char *token = argv[1];
-    Map *map = calloc(1, sizeof(Map)); //alokuje 50x50 na mape i wpisuje zera
-    map->x = 1;
-    map->y = 1;
+    Map *map = create_map(5, 5);
+    interpret_response(get_struct(token, "reset"), map);
     char command [30];
 
-    wypisz(map);
+    print_map(map);
     Response* response;
     Lista* explore;
 
@@ -29,38 +28,28 @@ int main(int argc, char **argv)
         if(strcmp(command, "reset") == 0)
         {
             free(map);
-            Map *map = calloc(1, sizeof(Map));
+            Map *map = create_map(5, 5);
         }
 
         else if(strcmp(command, "explore") == 0)
         {
             explore = get_explore(token);
         }
-        
+
         if(strcmp(command, "explore") != 0)
         {
-            map->x = response->x;
-            map->y = response->y;
-            map->field_type[25-(map->y)][(map->x)+25] = type(response->field_type);
-            map->step = response->step;
-            map->direction = response->direction;
+            interpret_response(response, map);
+            //powieksz_mape(map);
         }
         else
         {
             interpret_explore(explore, map);
+            //powieksz_mape(map);
         }
 
-        
-
-        wypisz(map); //podswietla na czerwono pozycje na ktorej sie znajdujemy
-        printf("x: %d\ny: %d\ndirection: %s\nstep: %d\n", map->x, map->y, map->direction, map->step);
+        print_map(map);
+        printf("%s\n", brzeg(map));
     }
-
-    // printf("%s\n", cJSON_Print(info(token, "info")));
-    // move(token, "move");
-    // printf("%s\n", cJSON_Print(info(token, "info")));
-    // rotate(token, "left", "rotate");
-    // printf("%s\n", cJSON_Print(info(token, "info")));
 
 
     free(map);
