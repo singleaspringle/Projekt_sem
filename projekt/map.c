@@ -82,8 +82,9 @@ void powieksz_mape(Map* A){
         B->y = A->y;
         B->dx = A->dx;
         B->dy = A->dy;
+        //kopiowanie mapy
     }
     else if (strcmp(brzeg(A), "E") == 0){
-        B = create_map(A->r, 2*A->c);
+        //...
     }
 }
