@@ -27,12 +27,12 @@ void free_map(Map* A){
 
 void print_map(Map *A){
     printf(ANSI_COLOR_RESET);
-    for(int i = A->r - 1; i >= 0; i--){
+    for(int i = 0; i < A->r; i++){
         printf("   ");
         for(int j = 0; j < A->c; j++){
             printf("+---"); //wypisuje rozdzielenie miedzy wierszami
         }
-        printf("+\n%3d", i + 1); //wypisuje numer wiersza
+        printf("+\n%3d", A->r - i); //wypisuje numer wiersza
         for(int j = 0; j < A->c; j++){
             if(A->y == i && A->x == j){ //podswietla na cyanowo nasza pozycje aktualna
                 printf("|");
@@ -75,7 +75,7 @@ void print_map(Map *A){
     }
     printf("\n");
     
-    printf("x: %d\ny: %d\ndirection: %s\nstep: %d\n", (A->x)+1, (A->y)+1, A->direction, A->step);
+    printf("x: %d\ny: %d\ndirection: %s\nstep: %d\n", (A->x)+1, A->r - (A->y), A->direction, A->step);
 }
 
 

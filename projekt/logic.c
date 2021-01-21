@@ -18,11 +18,11 @@ int offsetx(int x, Map* A){ //zamienia globalna wspolrzedna x na lokalna
 }
 
 int offsety(int y, Map* A){ //zamienia globalna wspolrzedna y na lokalna
-    return y + A->dy - 1;
+    return (A->r - y) - A->dx;
 }
 
 char* brzeg(Map* A){ //pokazuje przy jakim brzegu jestesmy
-    if(A->y == A->r - 1){ //przy gornym brzegu
+    if(A->y == 0){ //przy gornym brzegu
         if(A->x == A->c - 1) //gorny prawy
             return "NE";
         else if(A->x == 0) //gorny lewy
@@ -30,7 +30,7 @@ char* brzeg(Map* A){ //pokazuje przy jakim brzegu jestesmy
         else //gorny
             return "N";
     }
-    else if(A->y == 0){ //przy dolnym brzegu
+    else if(A->y == A->r - 1){ //przy dolnym brzegu
         if(A->x == A->c - 1) //dolny prawy
             return "SE";
         else if(A->x == 0) //dolny lewy
@@ -58,7 +58,7 @@ Map* add_chunk(Map* A){
         B->dy = A->dy;
         for(int i = A->r; i < B->r; i++){
             for(int j = 0; j < A->c; j++){
-                B->field_type[i][j] = A->field_type[i-A->r][j];
+                B->field_type[i][j] = A->field_type[i - A->r][j];
             }
         }
         free_map(A);
@@ -136,16 +136,16 @@ Map* interpret_explore (Lista* explore, Map* map){
     else if (strcmp(new->direction, "N") == 0){
         new->x = offsetx(explore->l2->x, new);
         new->y = offsety(explore->l1->y - 1, new);
-        new->field_type[new->y + 1][new->x + 1] = type(explore->l1->field_type);
-        new->field_type[new->y + 1][new->x] = type(explore->l2->field_type);
-        new->field_type[new->y + 1][new->x - 1] = type(explore->l3->field_type);
+        new->field_type[new->y - 1][new->x + 1] = type(explore->l1->field_type);
+        new->field_type[new->y - 1][new->x] = type(explore->l2->field_type);
+        new->field_type[new->y - 1][new->x - 1] = type(explore->l3->field_type);
     }
     else if (strcmp(new->direction, "S") == 0){
         new->x = offsetx(explore->l2->x, new);
         new->y = offsety(explore->l1->y + 1, new);
-        new->field_type[new->y - 1][new->x - 1] = type(explore->l1->field_type);
-        new->field_type[new->y - 1][new->x] = type(explore->l2->field_type);
-        new->field_type[new->y - 1][new->x + 1] = type(explore->l3->field_type);
+        new->field_type[new->y + 1][new->x - 1] = type(explore->l1->field_type);
+        new->field_type[new->y + 1][new->x] = type(explore->l2->field_type);
+        new->field_type[new->y + 1][new->x + 1] = type(explore->l3->field_type);
     }
 
     return new;
