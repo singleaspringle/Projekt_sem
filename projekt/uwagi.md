@@ -1,4 +1,5 @@
 Podzielić pliki:
+INSTRUKCJA OBSŁUGI, OPIS PO KOLEI DZIAŁANIA PROGRAMU
 1) main.c
 2) pliki źródłowe i nagłówkowe:
     - mapa - przechowywanie, struktura (wraz z dx,dy), alokacja, zwalnianie, wpisywanie, wypisywanie do pliku i na ekranie 
