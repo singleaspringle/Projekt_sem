@@ -43,14 +43,14 @@ char* brzeg(Map* A){ //pokazuje przy jakim brzegu jestesmy
     else if(A->x == 0) //lewy
         return "W";
     else
-        return "(null)";
+        return "null";
 }
 
 Map* add_chunk(Map* A){
     Map* B = NULL;
     if (strcmp(brzeg(A), "N") == 0){
         B = create_map(2*A->r, A->c);
-        strcpy(B->direction, A->direction);
+        B->direction = A->direction;
         B->step = A->step;
         B->x = A->x;
         B->y = A->y;
@@ -58,14 +58,14 @@ Map* add_chunk(Map* A){
         B->dy = A->dy;
         for(int i = A->r; i < B->r; i++){
             for(int j = 0; j < A->c; j++){
-                B->field_type[i][j] = A->field_type[i][j];
+                B->field_type[i][j] = A->field_type[i-A->r][j];
             }
         }
         free_map(A);
     }
     else if (strcmp(brzeg(A), "E") == 0){
         B = create_map(A->r, 2*A->c);
-        strcpy(B->direction, A->direction);
+        B->direction = A->direction;
         B->step = A->step;
         B->x = A->x;
         B->y = A->y;
@@ -80,7 +80,7 @@ Map* add_chunk(Map* A){
     }
     else if (strcmp(brzeg(A), "S") == 0){
         B = create_map(2*A->r, A->c);
-        strcpy(B->direction, A->direction);
+        B->direction = A->direction;
         B->step = A->step;
         B->dx = A->dx;
         B->dy = A->dy + A->r;
@@ -95,7 +95,7 @@ Map* add_chunk(Map* A){
     }
     else if (strcmp(brzeg(A), "W") == 0){
         B = create_map(A->r, 2*A->c);
-        strcpy(B->direction, A->direction);
+        B->direction = A->direction;
         B->step = A->step;
         B->dx = A->dx + A->c;
         B->dy = A->dy;
@@ -103,7 +103,7 @@ Map* add_chunk(Map* A){
         B->y = A->y;
         for(int i = 0; i < A->r; i++){
             for(int j = A->c; j < B->c; j++){
-                B->field_type[i][j] = A->field_type[i][j];
+                B->field_type[i][j] = A->field_type[i][j-A->c];
             }
         }
         free_map(A);
