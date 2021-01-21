@@ -13,6 +13,89 @@ int type(char* nazwa){
     else return -1;
 }
 
+// void seek_explored_field(){
+//     ;
+// }
+
+void seek_wall(Map* A, char* token){
+    int prevx = 1;
+    int prevy = 1;
+    while(!(prevx == A->x && prevy == A->y)){ //idzie do przodu dopoki napotka sciane
+        prevx = A->x;
+        prevy = A->y;
+        A = interpret_response(get_struct(token, "move"), A);
+    }
+
+    A = interpret_response(get_struct(token, "rotate_right"), A);
+}
+
+int seek_left_corner(Map* A, char* token){
+    A = interpret_explore(get_explore(token), A);
+    if(strcmp(A->direction, "N") == 0){
+        while(A->field_type[A->y - 1][A->x - 1] == 3){
+            A = interpret_response(get_struct(token, "move"), A);
+            A = interpret_explore(get_explore(token), A);
+            if(A->field_type[A->y - 1][A->x] == 3){
+                goto end;
+            }
+        }
+        return 1;
+    }
+    if(strcmp(A->direction, "E") == 0){
+        while(A->field_type[A->y - 1][A->x + 1] == 3){
+            A = interpret_response(get_struct(token, "move"), A);
+            A = interpret_explore(get_explore(token), A);
+            if(A->field_type[A->y][A->x + 1] == 3){
+                goto end;
+            }
+        }
+        return 1;
+    }
+    if(strcmp(A->direction, "S") == 0){
+        while(A->field_type[A->y + 1][A->x + 1] == 3){
+            A = interpret_response(get_struct(token, "move"), A);
+            A = interpret_explore(get_explore(token), A);
+            if(A->field_type[A->y + 1][A->x] == 3){
+                goto end;
+            }
+        }
+        return 1;
+    }
+    if(strcmp(A->direction, "W") == 0){
+        while(A->field_type[A->y + 1][A->x - 1] == 3){
+            A = interpret_response(get_struct(token, "move"), A);
+            A = interpret_explore(get_explore(token), A);
+            if(A->field_type[A->y][A->x - 1] == 3){
+                goto end;
+            }
+        }
+        return 1;
+    }
+
+    end:
+    A = interpret_response(get_struct(token, "rotate_right"), A);
+    return -1;
+}
+
+void bot(Map* A, char* token){
+    int x0, y0;
+    int l; //jezeli l = 4 to jest wewnetrzna przeszkoda, jezeli l = -4 to znaczy ze jest zewnetrzna otoczka
+    for(int i = 0; i < 3; i++){
+        l = 0;
+        seek_wall(A, token);
+        print_map(A);
+        x0 = A->x;
+        y0 = A->y;
+        l += seek_left_corner(A, token);
+        while(A->x != x0 || A->y != y0){
+            l += seek_left_corner(A, token);
+        }
+        // if(l == 4){
+        //     //wypelnij
+        // }
+    }
+}
+
 int offsetx(int x, Map* A){ //zamienia globalna wspolrzedna x na lokalna
     return x + A->dx - 1;
 }
@@ -147,6 +230,11 @@ Map* interpret_explore (Lista* explore, Map* map){
         new->field_type[new->y + 1][new->x] = type(explore->l2->field_type);
         new->field_type[new->y + 1][new->x + 1] = type(explore->l3->field_type);
     }
+
+    free(explore->l1);
+    free(explore->l2);
+    free(explore->l3);
+    free(explore);
 
     return new;
 }

@@ -17,35 +17,46 @@ int main(int argc, char **argv)
     Response* response;
     Lista* explore;
 
-    while(1){ //zeby wyjsc z programu nalezy wcisnac ctrl + c
-        fgets(command, 30, stdin);
-        strcpy(command, strtok(command, "\n"));
-
-        response = get_struct(token, command);
-
-        if(strcmp(command, "reset") == 0)
-        {
-            free(map);
-            Map *map = create_map(5, 5);
-        }
-
-        else if(strcmp(command, "explore") == 0)
-        {
-            explore = get_explore(token);
-        }
-
-        if(strcmp(command, "explore") != 0)
-        {
-            map = interpret_response(response, map);
-        }
-        else
-        {
-            map = interpret_explore(explore, map);
-        }
-
+    if(argc == 3){
+        if(strcmp(argv[2], "bot") == 0)
+            seek_wall(map, token);
+        
         print_map(map);
         printf("%s\n", brzeg(map));
     }
+    else{
+        while(1){ //zeby wyjsc z programu nalezy wcisnac ctrl + c
+            fgets(command, 30, stdin);
+            strcpy(command, strtok(command, "\n"));
+
+            response = get_struct(token, command);
+
+            if(strcmp(command, "reset") == 0)
+            {
+                free(map);
+                Map *map = create_map(5, 5);
+            }
+
+            else if(strcmp(command, "explore") == 0)
+            {
+                explore = get_explore(token);
+            }
+
+            if(strcmp(command, "explore") != 0)
+            {
+                map = interpret_response(response, map);
+            }
+            else
+            {
+                map = interpret_explore(explore, map);
+            }
+
+            
+            print_map(map);
+            printf("%s\n", brzeg(map));
+        }
+    }
+
 
 
     free(map);
