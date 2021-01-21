@@ -1,10 +1,12 @@
-#ifndef _load_H
-#define _load_H
+#ifndef _LOAD_H
+#define _LOAD_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <curl/curl.h>
 #include "cJSON/cJSON.h"
+#include "response.h"
+#include "map.h"
 
 #define ANSI_COLOR_CYAN "\x1b[36m"
 #define ANSI_COLOR_RED "\x1b[31;1m"

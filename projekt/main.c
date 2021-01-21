@@ -1,7 +1,5 @@
 #include "load.h"
-#include "logika.h"
-#include "map.h"
-#include "response.h"
+#include "logic.h"
 
 //null - 0
 //grass - 1
@@ -38,13 +36,11 @@ int main(int argc, char **argv)
 
         if(strcmp(command, "explore") != 0)
         {
-            interpret_response(response, map);
-            //powieksz_mape(map);
+            map = interpret_response(response, map);
         }
         else
         {
-            interpret_explore(explore, map);
-            //powieksz_mape(map);
+            map = interpret_explore(explore, map);
         }
 
         print_map(map);

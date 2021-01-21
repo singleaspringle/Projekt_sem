@@ -1,5 +1,4 @@
 #include "map.h"
-#include "logika.h"
 
 Map* create_map(int r, int c){
     Map *A = calloc(1, sizeof(Map));
@@ -17,6 +16,13 @@ Map* create_map(int r, int c){
     A->direction = NULL;
 
     return A;
+}
+
+void free_map(Map* A){
+    for(int i = 0; i < A->r; i++){
+        free(A->field_type[i]);
+    }
+    free(A);
 }
 
 void print_map(Map *A){
@@ -72,19 +78,4 @@ void print_map(Map *A){
     printf("x: %d\ny: %d\ndirection: %s\nstep: %d\n", (A->x)+1, (A->y)+1, A->direction, A->step);
 }
 
-void powieksz_mape(Map* A){
-    Map* B;
-    if (strcmp(brzeg(A), "N") == 0){
-        B = create_map(2*A->r, A->c);
-        B->direction = A->direction;
-        B->step = A->step;
-        B->x = A->x;
-        B->y = A->y;
-        B->dx = A->dx;
-        B->dy = A->dy;
-        //kopiowanie mapy
-    }
-    else if (strcmp(brzeg(A), "E") == 0){
-        //...
-    }
-}
+

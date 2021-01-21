@@ -11,8 +11,8 @@ typedef struct _Map
     int dx, dy;
 } Map;
 
+void free_map(Map* A);
 void print_map(Map *A);
 Map* create_map(int r, int c);
-void powieksz_mape(Map* A);
 
 #endif
