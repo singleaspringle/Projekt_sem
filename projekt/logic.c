@@ -38,18 +38,19 @@ Map* seek_left_corner(Map* A, char* token){
             if(A->field_type[A->y - 1][A->x] == 3){ //jezeli przed nim jest sciana
                 break;
             }
-            A = interpret_response(get_struct(token, "move"), A);
-            A = interpret_explore(get_explore(token), A);
+            else{
+                A = interpret_response(get_struct(token, "move"), A);
+                A = interpret_explore(get_explore(token), A);
+            }
+            print_map(A);
         }
 
-        if(A->field_type[A->y - 1][A->x] == 3){
+        if(A->field_type[A->y - 1][A->x] == 3){ //jezeli przed nim jest sciana to
             A = interpret_response(get_struct(token, "rotate_right"), A);
-            //return -1;
         }
         else{
             A = interpret_response(get_struct(token, "move"), A);
             A = interpret_response(get_struct(token, "rotate_left"), A);
-            //return 1;
         }
     }
     if(strcmp(A->direction, "E") == 0){
@@ -57,18 +58,19 @@ Map* seek_left_corner(Map* A, char* token){
             if(A->field_type[A->y][A->x + 1] == 3){
                 break;
             }
-            A = interpret_response(get_struct(token, "move"), A);
-            A = interpret_explore(get_explore(token), A);
+            else{
+                A = interpret_response(get_struct(token, "move"), A);
+                A = interpret_explore(get_explore(token), A);
+            }
+            print_map(A);
         }
 
         if(A->field_type[A->y][A->x + 1] == 3){
             A = interpret_response(get_struct(token, "rotate_right"), A);
-            //return -1;
         }
         else{
             A = interpret_response(get_struct(token, "move"), A);
             A = interpret_response(get_struct(token, "rotate_left"), A);
-            //return 1;
         }
     }
     if(strcmp(A->direction, "S") == 0){
@@ -76,18 +78,19 @@ Map* seek_left_corner(Map* A, char* token){
             if(A->field_type[A->y + 1][A->x] == 3){
                 break;
             }
-            A = interpret_response(get_struct(token, "move"), A);
-            A = interpret_explore(get_explore(token), A);
+            else{
+                A = interpret_response(get_struct(token, "move"), A);
+                A = interpret_explore(get_explore(token), A);
+            }
+            print_map(A);
         }
 
         if(A->field_type[A->y + 1][A->x] == 3){
             A = interpret_response(get_struct(token, "rotate_right"), A);
-            //return -1;
         }
         else{
             A = interpret_response(get_struct(token, "move"), A);
             A = interpret_response(get_struct(token, "rotate_left"), A);
-            //return 1;
         }
     }
     if(strcmp(A->direction, "W") == 0){
@@ -95,18 +98,19 @@ Map* seek_left_corner(Map* A, char* token){
             if(A->field_type[A->y][A->x - 1] == 3){
                 break;
             }
-            A = interpret_response(get_struct(token, "move"), A);
-            A = interpret_explore(get_explore(token), A);
+            else{
+                A = interpret_response(get_struct(token, "move"), A);
+                A = interpret_explore(get_explore(token), A);
+            }
+            print_map(A);
         }
         
         if(A->field_type[A->y][A->x - 1] == 3){
             A = interpret_response(get_struct(token, "rotate_right"), A);
-            //return -1;
         }
         else{
             A = interpret_response(get_struct(token, "move"), A);
             A = interpret_response(get_struct(token, "rotate_left"), A);
-            //return 1;
         }
     }
     return A;
@@ -115,15 +119,15 @@ Map* seek_left_corner(Map* A, char* token){
 Map* bot(Map* A, char* token){
     int x0, y0;
     int l; //jezeli l = 4 to jest wewnetrzna przeszkoda, jezeli l = -4 to znaczy ze jest zewnetrzna otoczka
-    for(int i = 0; i < 3; i++){
+    for(int i = 0; i < 10; i++){
         l = 0;
-        //A = seek_wall(A, token);
+        A = seek_wall(A, token);
         x0 = A->x;
         y0 = A->y;
-        A = seek_left_corner(A, token);
-        // while(A->x != x0 || A->y != y0){
-        //     l += seek_left_corner(A, token);
-        // }
+        A = interpret_response(get_struct(token, "move"), A);
+        while(x0 != A->x || y0 != A->y){
+            A = seek_left_corner(A, token);
+        }
         // if(l == 4){
         //     //wypelnij
         // }
