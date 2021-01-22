@@ -33,7 +33,7 @@ Map* seek_wall(Map* A, char* token){
 
 Map* seek_left_corner(Map* A, char* token){
     A = interpret_explore(get_explore(token), A);
-    //A->l=0;
+
     if(strcmp(A->direction, "N") == 0){
         while(A->field_type[A->y - 1][A->x - 1] == 3){ //lewy z przodu
             if(A->field_type[A->y - 1][A->x] == 3){ //jezeli przed nim jest sciana
@@ -132,25 +132,20 @@ Map* seek_left_corner(Map* A, char* token){
 
 Map* bot(Map* A, char* token){
     int x0, y0;
+    A->l = 0;
     //jezeli A->l = 4 to jest wewnetrzna przeszkoda, jezeli l = -4 to znaczy ze jest zewnetrzna otoczka
     //for(int i = 0; i < 1; i++){ //tutaj powinno byc cos takiego ze jakby jedno przejscie przez fora to jest jedna otoczka. Kiedy skonczy to zaczyna sie drugie przejscie przez fora i jakos trzeba go skierowac zeby szukal nowej otoczki, albo zaczal wypelniac
         A = seek_wall(A, token);
-        x0 = A->x;                                              //trzeba tu pomyslec jak to zrobic, bo chcemy zeby on robil seek corner dopoki nie wroci w to staamo miejsce
-        y0 = A->y;                                              //ale jezeli stoi pod sciana to od razu jest w tym samym miejscu i wtedy jest glupio
-        while(x0 == A->x && y0 == A->y){
-            A = interpret_response(get_struct(token, "move"), A);
-            if(A->x == x0 && A->y == y0)
-                A = interpret_response(get_struct(token, "rotate_right"), A); 
-        }
-        printf("po petli while 1 \n");
+        x0 = A->x;                                              
+        y0 = A->r - A->y;
+        //printf("po petli while 1 \n");
         printf("%d\n%d\n",y0,x0);
-        while(! (A->x==x0 && A->y ==y0)){
+        do{
             A = seek_left_corner(A, token);
-            
-            if((A->l == 4) || (A->l==-4))                    //to udaje sie tylko ze wzgledu na to ze ta mapa jest mala 
-                break;
-        }
-        printf("po petli while 2 \n");
+            // if((A->l == 4) || (A->l==-4))                    //to udaje sie tylko ze wzgledu na to ze ta mapa jest mala, nie dziala bo w miedzy czasie pojawia sie -4 albo 4 i przerywa
+            //     break;
+        }while(!(A->x == x0 && y0 == A->r - A->y));
+        //printf("po petli while 2 \n");
         
         
     //}
@@ -163,7 +158,7 @@ int offsetx(int x, Map* A){ //zamienia globalna wspolrzedna x na lokalna
 }
 
 int offsety(int y, Map* A){ //zamienia globalna wspolrzedna y na lokalna
-    return (A->r - y) - A->dx;
+    return (A->r - y) - A->dy;
 }
 
 char* brzeg(Map* A){ //pokazuje przy jakim brzegu jestesmy
@@ -232,7 +227,7 @@ Map* add_chunk(Map* A){
         B->dx = A->dx;
         B->dy = A->dy + A->r;
         B->x = A->x;
-        B->y = A->y + A->r;
+        B->y = A->y;
         for(int i = 0; i < A->r; i++){
             for(int j = 0; j < A->c; j++){
                 B->field_type[i][j] = A->field_type[i][j];
