@@ -18,11 +18,11 @@ int main(int argc, char **argv)
     Lista* explore;
 
     if(argc == 3){
-        if(strcmp(argv[2], "bot") == 0)
-            seek_wall(map, token);
-        
-        print_map(map);
-        printf("%s\n", brzeg(map));
+        if(strcmp(argv[2], "bot") == 0){
+            map = bot(map, token);
+            print_map(map);
+            printf("%s\n", brzeg(map));
+        }
     }
     else{
         while(1){ //zeby wyjsc z programu nalezy wcisnac ctrl + c
