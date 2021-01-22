@@ -119,12 +119,14 @@ Map* seek_left_corner(Map* A, char* token){
 Map* bot(Map* A, char* token){
     int x0, y0;
     int l; //jezeli l = 4 to jest wewnetrzna przeszkoda, jezeli l = -4 to znaczy ze jest zewnetrzna otoczka
-    for(int i = 0; i < 10; i++){
+    for(int i = 0; i < 1; i++){ //tutaj powinno byc cos takiego ze jakby jedno przejscie przez fora to jest jedna otoczka. Kiedy skonczy to zaczyna sie drugie przejscie przez fora i jakos trzeba go skierowac zeby szukal nowej otoczki, albo zaczal wypelniac
         l = 0;
         A = seek_wall(A, token);
-        x0 = A->x;
-        y0 = A->y;
-        A = interpret_response(get_struct(token, "move"), A);
+        x0 = A->x;                                              //trzeba tu pomyslec jak to zrobic, bo chcemy zeby on robil seek corner dopoki nie wroci w to samo miejsce
+        y0 = A->y;                                              //ale jezeli stoi pod sciana to od razu jest w tym samym miejscu i wtedy jest glupio
+        while(x0 == A->x && y0 == A->y){                        //chyba to zadziałało
+            A = seek_left_corner(A, token);
+        }
         while(x0 != A->x || y0 != A->y){
             A = seek_left_corner(A, token);
         }
