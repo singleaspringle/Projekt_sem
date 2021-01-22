@@ -27,14 +27,13 @@ Map* seek_wall(Map* A, char* token){
         print_map(A);
     }
     A = interpret_response(get_struct(token, "rotate_right"), A);
-    print_map(A);
-
     return A;
 }
+// Mozna zrobic ze jesli wiemy jaka pozycja jest startowa to robi break wtedy kiedy na niej jest ja mozna albo z palca albo z offsetu obliczyc 
 
 Map* seek_left_corner(Map* A, char* token){
     A = interpret_explore(get_explore(token), A);
-
+    //A->l=0;
     if(strcmp(A->direction, "N") == 0){
         while(A->field_type[A->y - 1][A->x - 1] == 3){ //lewy z przodu
             if(A->field_type[A->y - 1][A->x] == 3){ //jezeli przed nim jest sciana
@@ -49,10 +48,13 @@ Map* seek_left_corner(Map* A, char* token){
 
         if(A->field_type[A->y - 1][A->x] == 3){ //jezeli przed nim jest sciana to
             A = interpret_response(get_struct(token, "rotate_right"), A);
+            A = interpret_explore(get_explore(token), A);
+            A->l--;
         }
         else{
             A = interpret_response(get_struct(token, "move"), A);
             A = interpret_response(get_struct(token, "rotate_left"), A);
+            A->l++;
         }
     }
     if(strcmp(A->direction, "E") == 0){
@@ -69,10 +71,13 @@ Map* seek_left_corner(Map* A, char* token){
 
         if(A->field_type[A->y][A->x + 1] == 3){
             A = interpret_response(get_struct(token, "rotate_right"), A);
+            A = interpret_explore(get_explore(token), A);
+            A->l--;
         }
         else{
             A = interpret_response(get_struct(token, "move"), A);
             A = interpret_response(get_struct(token, "rotate_left"), A);
+            A->l++;
         }
     }
     if(strcmp(A->direction, "S") == 0){
@@ -89,10 +94,13 @@ Map* seek_left_corner(Map* A, char* token){
 
         if(A->field_type[A->y + 1][A->x] == 3){
             A = interpret_response(get_struct(token, "rotate_right"), A);
+            A = interpret_explore(get_explore(token), A);
+            A->l--;
         }
         else{
             A = interpret_response(get_struct(token, "move"), A);
             A = interpret_response(get_struct(token, "rotate_left"), A);
+            A->l++;
         }
     }
     if(strcmp(A->direction, "W") == 0){
@@ -109,37 +117,42 @@ Map* seek_left_corner(Map* A, char* token){
         
         if(A->field_type[A->y][A->x - 1] == 3){
             A = interpret_response(get_struct(token, "rotate_right"), A);
+            A = interpret_explore(get_explore(token), A);
+            A->l--;
         }
         else{
             A = interpret_response(get_struct(token, "move"), A);
             A = interpret_response(get_struct(token, "rotate_left"), A);
+            A->l++;
         }
     }
+    print_map(A);
     return A;
 }
 
 Map* bot(Map* A, char* token){
     int x0, y0;
-    int l; //jezeli l = 4 to jest wewnetrzna przeszkoda, jezeli l = -4 to znaczy ze jest zewnetrzna otoczka
+    //jezeli A->l = 4 to jest wewnetrzna przeszkoda, jezeli l = -4 to znaczy ze jest zewnetrzna otoczka
     //for(int i = 0; i < 1; i++){ //tutaj powinno byc cos takiego ze jakby jedno przejscie przez fora to jest jedna otoczka. Kiedy skonczy to zaczyna sie drugie przejscie przez fora i jakos trzeba go skierowac zeby szukal nowej otoczki, albo zaczal wypelniac
-        l = 0;
         A = seek_wall(A, token);
-        printf("wall found\n"); //zaczyna obchodzenie otoczki, juz jest skierowany rownolegle do sciany
-        x0 = A->x;                                              //trzeba tu pomyslec jak to zrobic, bo chcemy zeby on robil seek corner dopoki nie wroci w to samo miejsce
+        x0 = A->x;                                              //trzeba tu pomyslec jak to zrobic, bo chcemy zeby on robil seek corner dopoki nie wroci w to staamo miejsce
         y0 = A->y;                                              //ale jezeli stoi pod sciana to od razu jest w tym samym miejscu i wtedy jest glupio
         while(x0 == A->x && y0 == A->y){
             A = interpret_response(get_struct(token, "move"), A);
             if(A->x == x0 && A->y == y0)
                 A = interpret_response(get_struct(token, "rotate_right"), A); 
         }
-        printf("looking for left corner\n");
-        while(!(x0 == A->x && y0 == A->y)){
+        printf("po petli while 1 \n");
+        printf("%d\n%d\n",y0,x0);
+        while(! (A->x==x0 && A->y ==y0)){
             A = seek_left_corner(A, token);
-            printf("left corner found\n");
+            
+            if((A->l == 4) || (A->l==-4))                    //to udaje sie tylko ze wzgledu na to ze ta mapa jest mala 
+                break;
         }
-        // if(l == 4){
-        //     //wypelnij
-        // }
+        printf("po petli while 2 \n");
+        
+        
     //}
 
     return A;
@@ -298,6 +311,7 @@ Map* interpret_response (Response* response, Map* map){
     new->field_type[new->y][new->x] = type(response->field_type);
     new->step = response->step;
     new->direction = response->direction;
+    new->l=map->l;
 
     return new;
 }

@@ -9,6 +9,7 @@ typedef struct _Map
     int step, x, y; //lokalne x i y
     char* direction;
     int dx, dy;
+    int l;
 } Map;
 
 void free_map(Map* A);
