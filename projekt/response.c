@@ -47,7 +47,7 @@ Response* get_struct(char* token, char *command)
     free(request);
 
     return wynik;
-}
+} 
 
 Lista* get_explore(char *token)
 {
