@@ -32,7 +32,7 @@ void print_map(Map *A){
         for(int j = 0; j < A->c; j++){
             printf("+---"); //wypisuje rozdzielenie miedzy wierszami
         }
-        printf("+\n%3d", A->r - i); //wypisuje numer wiersza
+        printf("+\n%3d", A->r - 1 - i); //wypisuje numer wiersza
         for(int j = 0; j < A->c; j++){
             if(A->y == i && A->x == j){ //podswietla na cyanowo nasza pozycje aktualna
                 printf("|");
@@ -71,11 +71,11 @@ void print_map(Map *A){
     printf("+\n");
     printf("  ");
     for(int j = 0; j < A->c; j++){
-            printf("%4d", j+1); //wypisuje nr kolumny
+            printf("%4d", j); //wypisuje nr kolumny
     }
     printf("\n");
     
-    printf("x: %d\ny: %d\ndirection: %s\nstep: %d\n", (A->x)+1, A->r - (A->y), A->direction, A->step);
+    printf("x: %d\ny: %d\ndirection: %s\nstep: %d\n", A->x, A->r - 1 - (A->y), A->direction, A->step);
 }
 
 

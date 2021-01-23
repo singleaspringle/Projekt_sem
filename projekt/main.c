@@ -9,11 +9,19 @@
 int main(int argc, char **argv)
 {   
     char *token = argv[1];
-    Map *map = create_map(5, 5);
-    interpret_response(get_struct(token, "reset"), map);
     char command [30];
+    Map *map = create_map(5, 5);
+
+    Response* start;
+    start = get_struct(token, "info");
+
+    map->dx = get_dx(start->x);
+    map->dy = get_dy(start->y);
+    map = interpret_response(start, map);
 
     print_map(map);
+    printf("%s\n", brzeg(map));
+
     Response* response;
     Lista* explore;
 
@@ -29,26 +37,24 @@ int main(int argc, char **argv)
             fgets(command, 30, stdin);
             strcpy(command, strtok(command, "\n"));
 
-            response = get_struct(token, command);
-
             if(strcmp(command, "reset") == 0)
             {
-                free(map);
-                Map *map = create_map(5, 5);
+                response = get_struct(token, command);
+                //free(map);
+                map = create_map(5, 5);
+                map->dx = get_dx(response->x);
+                map->dy = get_dy(response->y);
+                map = interpret_response(response, map);
             }
-
             else if(strcmp(command, "explore") == 0)
             {
                 explore = get_explore(token);
-            }
-
-            if(strcmp(command, "explore") != 0)
-            {
-                map = interpret_response(response, map);
+                map = interpret_explore(explore, map);
             }
             else
             {
-                map = interpret_explore(explore, map);
+                response = get_struct(token, command);
+                map = interpret_response(response, map);
             }
 
             

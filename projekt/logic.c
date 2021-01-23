@@ -13,6 +13,30 @@ int type(char* nazwa){
     else return -1;
 }
 
+int get_dx(int xp){
+    return 3-xp;
+}
+
+int get_dy(int yp){
+    return 3-yp;
+}
+
+int offsetx(int x, Map* A){ //zamienia globalna wspolrzedna x na lokalna
+    return x + A->dx - 1;
+}
+
+int offsety(int y, Map* A){ //zamienia globalna wspolrzedna y na lokalna
+    return (A->r - y) - A->dy;
+}
+
+int loc_to_globx(int xloc, Map* A){ //zamienia lokalna wspolrzedna y na globalna
+    return xloc + 1 - A->dx;
+}
+
+int loc_to_globy(int yloc, Map* A){ //zamienia lokalna wspolrzedna y na globalna
+    return A->r - yloc - A->dy;
+}
+
 // void seek_explored_field(){
 //     ;
 // }
@@ -31,102 +55,176 @@ Map* seek_wall(Map* A, char* token){
 }
 // Mozna zrobic ze jesli wiemy jaka pozycja jest startowa to robi break wtedy kiedy na niej jest ja mozna albo z palca albo z offsetu obliczyc 
 
+// Map* seek_left_corner(Map* A, char* token){
+//     A = interpret_explore(get_explore(token), A);
+
+//     if(strcmp(A->direction, "N") == 0){
+//         while(A->field_type[A->y - 1][A->x - 1] == 3){ //lewy z przodu
+//             if(A->field_type[A->y - 1][A->x] == 3){ //jezeli przed nim jest sciana
+//                 break;
+//             }
+//             else{
+//                 A = interpret_response(get_struct(token, "move"), A);
+//                 A = interpret_explore(get_explore(token), A);
+//             }
+//             print_map(A);
+//         }
+
+//         if(A->field_type[A->y - 1][A->x] == 3){ //jezeli przed nim jest sciana to
+//             A = interpret_response(get_struct(token, "rotate_right"), A);
+//             A = interpret_explore(get_explore(token), A);
+//             A->l--;
+//         }
+//         else{
+//             A = interpret_response(get_struct(token, "move"), A);
+//             A = interpret_response(get_struct(token, "rotate_left"), A);
+//             A->l++;
+//         }
+//     }
+//     if(strcmp(A->direction, "E") == 0){
+//         while(A->field_type[A->y - 1][A->x + 1] == 3){
+//             if(A->field_type[A->y][A->x + 1] == 3){
+//                 break;
+//             }
+//             else{
+//                 A = interpret_response(get_struct(token, "move"), A);
+//                 A = interpret_explore(get_explore(token), A);
+//             }
+//             print_map(A);
+//         }
+
+//         if(A->field_type[A->y][A->x + 1] == 3){
+//             A = interpret_response(get_struct(token, "rotate_right"), A);
+//             A = interpret_explore(get_explore(token), A);
+//             A->l--;
+//         }
+//         else{
+//             A = interpret_response(get_struct(token, "move"), A);
+//             A = interpret_response(get_struct(token, "rotate_left"), A);
+//             A->l++;
+//         }
+//     }
+//     if(strcmp(A->direction, "S") == 0){
+//         while(A->field_type[A->y + 1][A->x + 1] == 3){
+//             if(A->field_type[A->y + 1][A->x] == 3){
+//                 break;
+//             }
+//             else{
+//                 A = interpret_response(get_struct(token, "move"), A);
+//                 A = interpret_explore(get_explore(token), A);
+//             }
+//             print_map(A);
+//         }
+
+//         if(A->field_type[A->y + 1][A->x] == 3){
+//             A = interpret_response(get_struct(token, "rotate_right"), A);
+//             A = interpret_explore(get_explore(token), A);
+//             A->l--;
+//         }
+//         else{
+//             A = interpret_response(get_struct(token, "move"), A);
+//             A = interpret_response(get_struct(token, "rotate_left"), A);
+//             A->l++;
+//         }
+//     }
+//     if(strcmp(A->direction, "W") == 0){
+//         while(A->field_type[A->y + 1][A->x - 1] == 3){
+//             if(A->field_type[A->y][A->x - 1] == 3){
+//                 break;
+//             }
+//             else{
+//                 A = interpret_response(get_struct(token, "move"), A);
+//                 A = interpret_explore(get_explore(token), A);
+//             }
+//             print_map(A);
+//         }
+        
+//         if(A->field_type[A->y][A->x - 1] == 3){
+//             A = interpret_response(get_struct(token, "rotate_right"), A);
+//             A = interpret_explore(get_explore(token), A);
+//             A->l--;
+//         }
+//         else{
+//             A = interpret_response(get_struct(token, "move"), A);
+//             A = interpret_response(get_struct(token, "rotate_left"), A);
+//             A->l++;
+//         }
+//     }
+//     print_map(A);
+//     return A;
+// }
+
 Map* seek_left_corner(Map* A, char* token){
     A = interpret_explore(get_explore(token), A);
 
     if(strcmp(A->direction, "N") == 0){
-        while(A->field_type[A->y - 1][A->x - 1] == 3){ //lewy z przodu
-            if(A->field_type[A->y - 1][A->x] == 3){ //jezeli przed nim jest sciana
-                break;
-            }
-            else{
-                A = interpret_response(get_struct(token, "move"), A);
-                A = interpret_explore(get_explore(token), A);
-            }
-            print_map(A);
-        }
-
-        if(A->field_type[A->y - 1][A->x] == 3){ //jezeli przed nim jest sciana to
+        if(A->field_type[A->y - 1][A->x] == 3){ //jezeli przed nim jest sciana
             A = interpret_response(get_struct(token, "rotate_right"), A);
             A = interpret_explore(get_explore(token), A);
             A->l--;
+        }
+        else if(A->field_type[A->y - 1][A->x - 1] == 3){
+            A = interpret_response(get_struct(token, "move"), A);
+            A = interpret_explore(get_explore(token), A);
         }
         else{
             A = interpret_response(get_struct(token, "move"), A);
             A = interpret_response(get_struct(token, "rotate_left"), A);
             A->l++;
         }
+        print_map(A);
     }
     if(strcmp(A->direction, "E") == 0){
-        while(A->field_type[A->y - 1][A->x + 1] == 3){
-            if(A->field_type[A->y][A->x + 1] == 3){
-                break;
-            }
-            else{
-                A = interpret_response(get_struct(token, "move"), A);
-                A = interpret_explore(get_explore(token), A);
-            }
-            print_map(A);
-        }
-
         if(A->field_type[A->y][A->x + 1] == 3){
             A = interpret_response(get_struct(token, "rotate_right"), A);
             A = interpret_explore(get_explore(token), A);
             A->l--;
         }
+        else if(A->field_type[A->y - 1][A->x + 1] == 3){
+            A = interpret_response(get_struct(token, "move"), A);
+            A = interpret_explore(get_explore(token), A);
+        }
         else{
             A = interpret_response(get_struct(token, "move"), A);
             A = interpret_response(get_struct(token, "rotate_left"), A);
             A->l++;
         }
+        print_map(A);
     }
     if(strcmp(A->direction, "S") == 0){
-        while(A->field_type[A->y + 1][A->x + 1] == 3){
-            if(A->field_type[A->y + 1][A->x] == 3){
-                break;
-            }
-            else{
-                A = interpret_response(get_struct(token, "move"), A);
-                A = interpret_explore(get_explore(token), A);
-            }
-            print_map(A);
-        }
-
         if(A->field_type[A->y + 1][A->x] == 3){
             A = interpret_response(get_struct(token, "rotate_right"), A);
             A = interpret_explore(get_explore(token), A);
             A->l--;
         }
+        else if(A->field_type[A->y + 1][A->x + 1] == 3){
+            A = interpret_response(get_struct(token, "move"), A);
+            A = interpret_explore(get_explore(token), A);
+        }
         else{
             A = interpret_response(get_struct(token, "move"), A);
             A = interpret_response(get_struct(token, "rotate_left"), A);
             A->l++;
         }
+        print_map(A);
     }
     if(strcmp(A->direction, "W") == 0){
-        while(A->field_type[A->y + 1][A->x - 1] == 3){
-            if(A->field_type[A->y][A->x - 1] == 3){
-                break;
-            }
-            else{
-                A = interpret_response(get_struct(token, "move"), A);
-                A = interpret_explore(get_explore(token), A);
-            }
-            print_map(A);
-        }
-        
         if(A->field_type[A->y][A->x - 1] == 3){
             A = interpret_response(get_struct(token, "rotate_right"), A);
             A = interpret_explore(get_explore(token), A);
             A->l--;
         }
+        else if (A->field_type[A->y + 1][A->x - 1] == 3){
+            A = interpret_response(get_struct(token, "move"), A);
+            A = interpret_explore(get_explore(token), A);
+        }
         else{
             A = interpret_response(get_struct(token, "move"), A);
             A = interpret_response(get_struct(token, "rotate_left"), A);
             A->l++;
         }
+        print_map(A);
     }
-    print_map(A);
     return A;
 }
 
@@ -136,29 +234,19 @@ Map* bot(Map* A, char* token){
     //jezeli A->l = 4 to jest wewnetrzna przeszkoda, jezeli l = -4 to znaczy ze jest zewnetrzna otoczka
     //for(int i = 0; i < 1; i++){ //tutaj powinno byc cos takiego ze jakby jedno przejscie przez fora to jest jedna otoczka. Kiedy skonczy to zaczyna sie drugie przejscie przez fora i jakos trzeba go skierowac zeby szukal nowej otoczki, albo zaczal wypelniac
         A = seek_wall(A, token);
-        x0 = A->x;                                              
-        y0 = A->r - A->y;
+        x0 = loc_to_globx(A->x, A);     //poniewaz podczas algorytmu seek_left_corner mapa sie rozszerza, to postanowilismy zapisac x0 i y0 we wspolrzednych globalnych                                         
+        y0 = loc_to_globy(A->y, A);     //wtedy w warunku while na biezaco sprawdzamy rowniez globalne wspolrzedne
         //printf("po petli while 1 \n");
         printf("%d\n%d\n",y0,x0);
         do{
             A = seek_left_corner(A, token);
-            // if((A->l == 4) || (A->l==-4))                    //to udaje sie tylko ze wzgledu na to ze ta mapa jest mala, nie dziala bo w miedzy czasie pojawia sie -4 albo 4 i przerywa
-            //     break;
-        }while(!(A->x == x0 && y0 == A->r - A->y));
+        } while(!(x0 == loc_to_globx(A->x, A) && y0 == loc_to_globy(A->y, A))); //chodzi o to zeby przerywal algorytm kiedy wroci do miejsca w ktorym zaczal seek_left_corner.
         //printf("po petli while 2 \n");
         
         
     //}
 
     return A;
-}
-
-int offsetx(int x, Map* A){ //zamienia globalna wspolrzedna x na lokalna
-    return x + A->dx - 1;
-}
-
-int offsety(int y, Map* A){ //zamienia globalna wspolrzedna y na lokalna
-    return (A->r - y) - A->dy;
 }
 
 char* brzeg(Map* A){ //pokazuje przy jakim brzegu jestesmy
@@ -188,7 +276,7 @@ char* brzeg(Map* A){ //pokazuje przy jakim brzegu jestesmy
 
 Map* add_chunk(Map* A){
     Map* B = NULL;
-    if (strcmp(brzeg(A), "N") == 0){
+    if (strcmp(brzeg(A), "N") == 0 || strcmp(brzeg(A), "NE") == 0 || strcmp(brzeg(A), "NW") == 0){
         B = create_map(2*A->r, A->c);
         B->direction = A->direction;
         B->step = A->step;
@@ -204,7 +292,7 @@ Map* add_chunk(Map* A){
         free_map(A);
         return B;
     }
-    else if (strcmp(brzeg(A), "E") == 0){
+    if (strcmp(brzeg(A), "E") == 0 || strcmp(brzeg(A), "NE") == 0 || strcmp(brzeg(A), "SE") == 0){
         B = create_map(A->r, 2*A->c);
         B->direction = A->direction;
         B->step = A->step;
@@ -220,7 +308,7 @@ Map* add_chunk(Map* A){
         free_map(A);
         return B;
     }
-    else if (strcmp(brzeg(A), "S") == 0){
+    if (strcmp(brzeg(A), "S") == 0 || strcmp(brzeg(A), "SE") == 0 || strcmp(brzeg(A), "SW") == 0){
         B = create_map(2*A->r, A->c);
         B->direction = A->direction;
         B->step = A->step;
@@ -236,7 +324,7 @@ Map* add_chunk(Map* A){
         free_map(A);
         return B;
     }
-    else if (strcmp(brzeg(A), "W") == 0){
+    if (strcmp(brzeg(A), "W") == 0 || strcmp(brzeg(A), "NW") == 0 || strcmp(brzeg(A), "SW") == 0){
         B = create_map(A->r, 2*A->c);
         B->direction = A->direction;
         B->step = A->step;
