@@ -13,7 +13,7 @@ Map* create_map(int r, int c){
     A->x = 2;
     A->y = 2;
     A->step = 0;
-    A->direction = NULL;
+    A->direction = calloc(1, sizeof(char));
     A->l = 0;
 
     return A;
@@ -24,6 +24,7 @@ void free_map(Map* A){
         free(A->field_type[i]);
     }
     free(A->field_type);
+    free(A->direction);
     free(A);
 }
 

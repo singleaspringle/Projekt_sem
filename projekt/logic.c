@@ -13,6 +13,27 @@ int type(char* nazwa){
     else return -1;
 }
 
+void free_explore(Lista* explore){
+    free(explore->status);
+    free(explore->l1->field_type);
+    free(explore->l2->field_type);
+    free(explore->l3->field_type);
+    free(explore->l1);
+    free(explore->l2);
+    free(explore->l3);
+    free(explore);
+}
+
+void free_response(Response* response){
+    free(response->field_bonus);
+    free(response->field_type);
+    free(response->name);
+    free(response->session);
+    free(response->direction);
+    free(response->status);
+    free(response);
+}
+
 int get_dx(int xp){
     return 3-xp;
 }
@@ -286,7 +307,7 @@ Map* add_chunk(Map* A){
     Map* B = NULL;
     if (strcmp(brzeg(A), "N") == 0 || strcmp(brzeg(A), "NE") == 0 || strcmp(brzeg(A), "NW") == 0){
         B = create_map(2*A->r, A->c);
-        B->direction = A->direction;
+        strcpy(B->direction, A->direction);
         B->step = A->step;
         B->x = A->x;
         B->y = A->y;
@@ -302,7 +323,7 @@ Map* add_chunk(Map* A){
     }
     if (strcmp(brzeg(A), "E") == 0 || strcmp(brzeg(A), "NE") == 0 || strcmp(brzeg(A), "SE") == 0){
         B = create_map(A->r, 2*A->c);
-        B->direction = A->direction;
+        strcpy(B->direction, A->direction);
         B->step = A->step;
         B->x = A->x;
         B->y = A->y;
@@ -318,7 +339,7 @@ Map* add_chunk(Map* A){
     }
     if (strcmp(brzeg(A), "S") == 0 || strcmp(brzeg(A), "SE") == 0 || strcmp(brzeg(A), "SW") == 0){
         B = create_map(2*A->r, A->c);
-        B->direction = A->direction;
+        strcpy(B->direction, A->direction);
         B->step = A->step;
         B->dx = A->dx;
         B->dy = A->dy + A->r;
@@ -334,7 +355,7 @@ Map* add_chunk(Map* A){
     }
     if (strcmp(brzeg(A), "W") == 0 || strcmp(brzeg(A), "NW") == 0 || strcmp(brzeg(A), "SW") == 0){
         B = create_map(A->r, 2*A->c);
-        B->direction = A->direction;
+        strcpy(B->direction, A->direction);
         B->step = A->step;
         B->dx = A->dx + A->c;
         B->dy = A->dy;
@@ -388,10 +409,7 @@ Map* interpret_explore (Lista* explore, Map* map){
         new->field_type[new->y + 1][new->x + 1] = type(explore->l3->field_type);
     }
 
-    free(explore->l1);
-    free(explore->l2);
-    free(explore->l3);
-    free(explore);
+    free_explore(explore);
 
     return new;
 }
@@ -404,10 +422,10 @@ Map* interpret_response (Response* response, Map* map){
     new->y = offsety(response->y, new);
     new->field_type[new->y][new->x] = type(response->field_type);
     new->step = response->step;
-    new->direction = response->direction;
+    strcpy(new->direction, response->direction);
     new->l = l;
 
-    free(response);
+    free_response(response);
     return new;
 }
 
