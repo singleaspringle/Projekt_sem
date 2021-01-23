@@ -174,7 +174,7 @@ Map* seek_left_corner(Map* A, char* token){
         }
         print_map(A);
     }
-    if(strcmp(A->direction, "E") == 0){
+    else if(strcmp(A->direction, "E") == 0){
         if(A->field_type[A->y][A->x + 1] == 3){
             A = interpret_response(get_struct(token, "rotate_right"), A);
             A = interpret_explore(get_explore(token), A);
@@ -191,7 +191,7 @@ Map* seek_left_corner(Map* A, char* token){
         }
         print_map(A);
     }
-    if(strcmp(A->direction, "S") == 0){
+    else if(strcmp(A->direction, "S") == 0){
         if(A->field_type[A->y + 1][A->x] == 3){
             A = interpret_response(get_struct(token, "rotate_right"), A);
             A = interpret_explore(get_explore(token), A);
@@ -208,7 +208,7 @@ Map* seek_left_corner(Map* A, char* token){
         }
         print_map(A);
     }
-    if(strcmp(A->direction, "W") == 0){
+    else if(strcmp(A->direction, "W") == 0){
         if(A->field_type[A->y][A->x - 1] == 3){
             A = interpret_response(get_struct(token, "rotate_right"), A);
             A = interpret_explore(get_explore(token), A);
@@ -238,7 +238,7 @@ Map* bot(Map* A, char* token){
         y0 = loc_to_globy(A->y, A);     //wtedy w warunku while na biezaco sprawdzamy rowniez globalne wspolrzedne
         //printf("po petli while 1 \n");
         printf("%d\n%d\n",y0,x0);
-        do{
+        do{ //trzeba tutaj zrobic cos takiego, zeby on najpierw wyszedl z tego miejsca gdzie znalazl sciane a pozniej dopiero zapisal x0 i y0 bo jak na przyklad bedzie musial 2 razy sie obrocic to od razu przerwie while bo x = x0 i y = y0
             A = seek_left_corner(A, token);
         } while(!(x0 == loc_to_globx(A->x, A) && y0 == loc_to_globy(A->y, A))); //chodzi o to zeby przerywal algorytm kiedy wroci do miejsca w ktorym zaczal seek_left_corner.
         //printf("po petli while 2 \n");
