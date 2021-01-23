@@ -13,8 +13,9 @@ void clean_response (Response *dana)
 
 Response* get_struct(char* token, char *command)
 {
+    char* request = get_request(token, command);
     Response* wynik = calloc(1, sizeof(Response));
-    cJSON* json = cJSON_Parse(get_request(token, command));
+    cJSON* json = cJSON_Parse(request);
 
     if(json == NULL){
         const char* error_ptr = cJSON_GetErrorPtr();
@@ -42,14 +43,17 @@ Response* get_struct(char* token, char *command)
     wynik->field_bonus = cJSON_GetStringValue(cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(json, "payload"), 7));
 
     cJSON_free(json);
+    //cJSON_Delete(json);
+    free(request);
 
     return wynik;
 }
 
 Lista* get_explore(char *token)
 {
+    char* request = get_request(token, "explore");
     Lista* wynik = calloc(1, sizeof(Lista));
-    cJSON* json = cJSON_Parse(get_request(token, "explore"));
+    cJSON* json = cJSON_Parse(request);
 
     wynik->l1 = calloc(1, sizeof(Pole));
     wynik->l2 = calloc(1, sizeof(Pole));
@@ -77,6 +81,8 @@ Lista* get_explore(char *token)
     wynik->l3->field_type = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(json, "payload"), "list"), 2), "type"));
 
     cJSON_free(json);
+    //cJSON_Delete(json);
+    free(request);
 
     return wynik;
 }

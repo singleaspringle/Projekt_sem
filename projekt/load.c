@@ -60,18 +60,19 @@ char *make_request(char *url)
         res = curl_easy_perform(curl);
 
         /* Sprawdzamy czy wystapił jakis błąd? */
-        if (res != CURLE_OK)
+        if (res != CURLE_OK){
+            curl_easy_cleanup(curl);
+            curl_global_cleanup();
             return "Błąd!\n";
+        }
         else
         {
+            /* zawsze po sobie sprzątaj */
+            curl_easy_cleanup(curl);
+            curl_global_cleanup();
             return chunk.response;
         }
     }
-    
-    /* zawsze po sobie sprzątaj */
-    free(chunk.response);
-    curl_easy_cleanup(curl);
-    curl_global_cleanup();
 }
 
 char* get_request(char* token, char* command){
