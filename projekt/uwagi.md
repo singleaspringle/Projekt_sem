@@ -48,4 +48,11 @@ Eksplorowanie świata(ok. 44:10 na nagraniu do 01:11:00):
         W skrócie cały czas move rotate_L sprawdzenie czy da się do przodu jesli tak to move jesli nie to Rotate_R i move i od nowa 
 
 
-
+CO ZROBIC( AKTUALNE ):
+    ZROBIC JPG !!!
+    ZROBIC PODZIAL NA PLIKI DOKLADNIE
+    EWENTUALNIE UPROSCIC FUNKCJE I PODZIELIC NA MNIEJSZE PODFUNKCJE
+    ZROBIC TEST KAZDEGO MODULU
+    CO Z WIEKSZA MAPA, JAK NAKIEROWAC DALEJ CZOLGA
+    ZMIENIC BRZEGA NA EDGE !!!
+    ZWRACANIE DO PLIKU, CZYTANIE Z PLIKU !!!
