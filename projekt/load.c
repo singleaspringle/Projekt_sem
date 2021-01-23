@@ -37,6 +37,7 @@ char *make_request(char *url)
     Memory chunk;
     chunk.size = 0;
     chunk.response = NULL;
+    curl_global_init(0);
 
     curl = curl_easy_init();
     if (curl)
@@ -70,6 +71,7 @@ char *make_request(char *url)
     /* zawsze po sobie sprzątaj */
     free(chunk.response);
     curl_easy_cleanup(curl);
+    curl_global_cleanup();
 }
 
 char* get_request(char* token, char* command){

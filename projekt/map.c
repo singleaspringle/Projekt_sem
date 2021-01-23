@@ -14,6 +14,7 @@ Map* create_map(int r, int c){
     A->y = 2;
     A->step = 0;
     A->direction = NULL;
+    A->l = 0;
 
     return A;
 }
@@ -22,6 +23,7 @@ void free_map(Map* A){
     for(int i = 0; i < A->r; i++){
         free(A->field_type[i]);
     }
+    free(A->field_type);
     free(A);
 }
 

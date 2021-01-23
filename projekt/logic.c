@@ -51,6 +51,7 @@ Map* seek_wall(Map* A, char* token){
         print_map(A);
     }
     A = interpret_response(get_struct(token, "rotate_right"), A);
+    A = interpret_explore(get_explore(token), A);
     return A;
 }
 // Mozna zrobic ze jesli wiemy jaka pozycja jest startowa to robi break wtedy kiedy na niej jest ja mozna albo z palca albo z offsetu obliczyc 
@@ -155,8 +156,6 @@ Map* seek_wall(Map* A, char* token){
 // }
 
 Map* seek_left_corner(Map* A, char* token){
-    A = interpret_explore(get_explore(token), A);
-
     if(strcmp(A->direction, "N") == 0){
         if(A->field_type[A->y - 1][A->x] == 3){ //jezeli przed nim jest sciana
             A = interpret_response(get_struct(token, "rotate_right"), A);
@@ -170,6 +169,7 @@ Map* seek_left_corner(Map* A, char* token){
         else{
             A = interpret_response(get_struct(token, "move"), A);
             A = interpret_response(get_struct(token, "rotate_left"), A);
+            A = interpret_explore(get_explore(token), A);
             A->l++;
         }
         print_map(A);
@@ -187,6 +187,7 @@ Map* seek_left_corner(Map* A, char* token){
         else{
             A = interpret_response(get_struct(token, "move"), A);
             A = interpret_response(get_struct(token, "rotate_left"), A);
+            A = interpret_explore(get_explore(token), A);
             A->l++;
         }
         print_map(A);
@@ -204,6 +205,7 @@ Map* seek_left_corner(Map* A, char* token){
         else{
             A = interpret_response(get_struct(token, "move"), A);
             A = interpret_response(get_struct(token, "rotate_left"), A);
+            A = interpret_explore(get_explore(token), A);
             A->l++;
         }
         print_map(A);
@@ -221,6 +223,7 @@ Map* seek_left_corner(Map* A, char* token){
         else{
             A = interpret_response(get_struct(token, "move"), A);
             A = interpret_response(get_struct(token, "rotate_left"), A);
+            A = interpret_explore(get_explore(token), A);
             A->l++;
         }
         print_map(A);
@@ -231,17 +234,22 @@ Map* seek_left_corner(Map* A, char* token){
 Map* bot(Map* A, char* token){
     int x0, y0;
     A->l = 0;
-    //jezeli A->l = 4 to jest wewnetrzna przeszkoda, jezeli l = -4 to znaczy ze jest zewnetrzna otoczka
+    //jezeli A->l = 4 to jest wewnetrzna przeszkoda, jezeli A->l = -4 to znaczy ze jest zewnetrzna otoczka
     //for(int i = 0; i < 1; i++){ //tutaj powinno byc cos takiego ze jakby jedno przejscie przez fora to jest jedna otoczka. Kiedy skonczy to zaczyna sie drugie przejscie przez fora i jakos trzeba go skierowac zeby szukal nowej otoczki, albo zaczal wypelniac
         A = seek_wall(A, token);
         x0 = loc_to_globx(A->x, A);     //poniewaz podczas algorytmu seek_left_corner mapa sie rozszerza, to postanowilismy zapisac x0 i y0 we wspolrzednych globalnych                                         
-        y0 = loc_to_globy(A->y, A);     //wtedy w warunku while na biezaco sprawdzamy rowniez globalne wspolrzedne
-        //printf("po petli while 1 \n");
+        y0 = loc_to_globy(A->y, A);     //wtedy w warunku while na biezaco sprawdzamy globalne wspolrzedne i nie ma znaczenia rozmiar mapy wzgledem tego co byl na poczatku
         printf("%d\n%d\n",y0,x0);
+        while(x0 == loc_to_globx(A->x, A) && y0 == loc_to_globy(A->y, A)){
+            A = interpret_response(get_struct(token, "move"), A);
+            if(x0 == loc_to_globx(A->x, A) && y0 == loc_to_globy(A->y, A))
+                A = interpret_response(get_struct(token, "rotate_right"), A);
+        }
         do{ //trzeba tutaj zrobic cos takiego, zeby on najpierw wyszedl z tego miejsca gdzie znalazl sciane a pozniej dopiero zapisal x0 i y0 bo jak na przyklad bedzie musial 2 razy sie obrocic to od razu przerwie while bo x = x0 i y = y0
             A = seek_left_corner(A, token);
+            printf("petla\n");
         } while(!(x0 == loc_to_globx(A->x, A) && y0 == loc_to_globy(A->y, A))); //chodzi o to zeby przerywal algorytm kiedy wroci do miejsca w ktorym zaczal seek_left_corner.
-        //printf("po petli while 2 \n");
+        printf("po petli\n");
         
         
     //}
@@ -346,8 +354,10 @@ Map* add_chunk(Map* A){
 }
 
 Map* interpret_explore (Lista* explore, Map* map){
+    int l = map->l;
     Map* new = add_chunk(map);
     new->step ++;
+    new->l = l;
 
     if(strcmp(new->direction, "E") == 0){
         new->x = offsetx(explore->l1->x - 1, new);
@@ -387,6 +397,7 @@ Map* interpret_explore (Lista* explore, Map* map){
 }
 
 Map* interpret_response (Response* response, Map* map){
+    int l = map->l;
     Map* new = add_chunk(map);
 
     new->x = offsetx(response->x, new);
@@ -394,8 +405,9 @@ Map* interpret_response (Response* response, Map* map){
     new->field_type[new->y][new->x] = type(response->field_type);
     new->step = response->step;
     new->direction = response->direction;
-    new->l=map->l;
+    new->l = l;
 
+    free(response);
     return new;
 }
 

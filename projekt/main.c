@@ -20,7 +20,7 @@ int main(int argc, char **argv)
     map = interpret_response(start, map);
 
     print_map(map);
-    printf("%s\n", brzeg(map));
+    //printf("%s\n", brzeg(map));
 
     Response* response;
     Lista* explore;
@@ -29,7 +29,7 @@ int main(int argc, char **argv)
         if(strcmp(argv[2], "bot") == 0){
             map = bot(map, token);
             print_map(map);
-            printf("%s\n", brzeg(map));
+            //printf("%s\n", brzeg(map));
         }
     }
     else{
@@ -59,11 +59,9 @@ int main(int argc, char **argv)
 
             
             print_map(map);
-            printf("%s\n", brzeg(map));
+            //printf("%s\n", brzeg(map));
         }
     }
-
-
 
     free(map);
     return 0;
