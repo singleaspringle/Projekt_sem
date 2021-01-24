@@ -13,7 +13,6 @@ int main(int argc, char **argv)
     char command [30];
 
     Map* map = set_map(map, token);
-    print_map(map);
 
     Response* response;
     Lista* explore;
@@ -34,6 +33,7 @@ int main(int argc, char **argv)
         else if(strcmp(argv[2], "test-save-map") == 0){
             FILE* f = fopen("mapa.txt", "r+");
             map = bot(map, token);
+            print_map(map);
             fprint_map(map, f);
             fclose(f);
             png_map("mapa.png", "tilesn.png", map);
@@ -61,7 +61,8 @@ int main(int argc, char **argv)
             png_map("mapa.png", "tilesn.png", map);
         }
     }
-    if(argc == 2 || strcmp(argv[2], "test-load-map") == 0){
+    if(argc == 2 || strcmp(argv[2], "test-load-map") == 0){ //czesc interaktywna, do latwiejszego testowania poprawnego dzialania programu. W finalnej wersji jej nie bedzie.
+        print_map(map);
         while(1){ //zeby wyjsc z programu nalezy wcisnac ctrl + c
             fgets(command, 30, stdin);
             strcpy(command, strtok(command, "\n"));
