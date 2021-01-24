@@ -5,8 +5,6 @@
 #include <string.h>
 #include <curl/curl.h>
 #include "cJSON/cJSON.h"
-#include "response.h"
-#include "map.h"
 
 #define ANSI_COLOR_CYAN "\x1b[36m"
 #define ANSI_COLOR_RED "\x1b[31;1m"

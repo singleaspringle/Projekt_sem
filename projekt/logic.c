@@ -34,6 +34,25 @@ void free_response(Response* response){
     free(response);
 }
 
+Map* set_map(Map* map, char* token){
+    Response* start = get_struct(token, "info");
+
+    map->dx = get_dx(start->x);
+    map->dy = get_dy(start->y);
+    map = interpret_response(start, map);
+
+    return map;
+}
+
+Map* reset_map(Map* map, char* token){
+    Response* response = get_struct(token, "reset");
+
+    map = create_map(5, 5);
+    map->dx = get_dx(response->x);
+    map->dy = get_dy(response->y);
+    map = interpret_response(response, map);
+}
+
 int get_dx(int xp){
     return 3-xp;
 }
@@ -58,7 +77,7 @@ int loc_to_globy(int yloc, Map* A){ //zamienia lokalna wspolrzedna y na globalna
     return A->r - yloc - A->dy;
 }
 
-// void seek_explored_field(){
+// void seek_explored_field(){ //kiedy znajdzie jedna otoczke to zeby szukal nowego nieodkrytego miejsca
 //     ;
 // }
 
@@ -75,106 +94,6 @@ Map* seek_wall(Map* A, char* token){
     A = interpret_explore(get_explore(token), A);
     return A;
 }
-// Mozna zrobic ze jesli wiemy jaka pozycja jest startowa to robi break wtedy kiedy na niej jest ja mozna albo z palca albo z offsetu obliczyc 
-
-// Map* seek_left_corner(Map* A, char* token){
-//     A = interpret_explore(get_explore(token), A);
-
-//     if(strcmp(A->direction, "N") == 0){
-//         while(A->field_type[A->y - 1][A->x - 1] == 3){ //lewy z przodu
-//             if(A->field_type[A->y - 1][A->x] == 3){ //jezeli przed nim jest sciana
-//                 break;
-//             }
-//             else{
-//                 A = interpret_response(get_struct(token, "move"), A);
-//                 A = interpret_explore(get_explore(token), A);
-//             }
-//             print_map(A);
-//         }
-
-//         if(A->field_type[A->y - 1][A->x] == 3){ //jezeli przed nim jest sciana to
-//             A = interpret_response(get_struct(token, "rotate_right"), A);
-//             A = interpret_explore(get_explore(token), A);
-//             A->l--;
-//         }
-//         else{
-//             A = interpret_response(get_struct(token, "move"), A);
-//             A = interpret_response(get_struct(token, "rotate_left"), A);
-//             A->l++;
-//         }
-//     }
-//     if(strcmp(A->direction, "E") == 0){
-//         while(A->field_type[A->y - 1][A->x + 1] == 3){
-//             if(A->field_type[A->y][A->x + 1] == 3){
-//                 break;
-//             }
-//             else{
-//                 A = interpret_response(get_struct(token, "move"), A);
-//                 A = interpret_explore(get_explore(token), A);
-//             }
-//             print_map(A);
-//         }
-
-//         if(A->field_type[A->y][A->x + 1] == 3){
-//             A = interpret_response(get_struct(token, "rotate_right"), A);
-//             A = interpret_explore(get_explore(token), A);
-//             A->l--;
-//         }
-//         else{
-//             A = interpret_response(get_struct(token, "move"), A);
-//             A = interpret_response(get_struct(token, "rotate_left"), A);
-//             A->l++;
-//         }
-//     }
-//     if(strcmp(A->direction, "S") == 0){
-//         while(A->field_type[A->y + 1][A->x + 1] == 3){
-//             if(A->field_type[A->y + 1][A->x] == 3){
-//                 break;
-//             }
-//             else{
-//                 A = interpret_response(get_struct(token, "move"), A);
-//                 A = interpret_explore(get_explore(token), A);
-//             }
-//             print_map(A);
-//         }
-
-//         if(A->field_type[A->y + 1][A->x] == 3){
-//             A = interpret_response(get_struct(token, "rotate_right"), A);
-//             A = interpret_explore(get_explore(token), A);
-//             A->l--;
-//         }
-//         else{
-//             A = interpret_response(get_struct(token, "move"), A);
-//             A = interpret_response(get_struct(token, "rotate_left"), A);
-//             A->l++;
-//         }
-//     }
-//     if(strcmp(A->direction, "W") == 0){
-//         while(A->field_type[A->y + 1][A->x - 1] == 3){
-//             if(A->field_type[A->y][A->x - 1] == 3){
-//                 break;
-//             }
-//             else{
-//                 A = interpret_response(get_struct(token, "move"), A);
-//                 A = interpret_explore(get_explore(token), A);
-//             }
-//             print_map(A);
-//         }
-        
-//         if(A->field_type[A->y][A->x - 1] == 3){
-//             A = interpret_response(get_struct(token, "rotate_right"), A);
-//             A = interpret_explore(get_explore(token), A);
-//             A->l--;
-//         }
-//         else{
-//             A = interpret_response(get_struct(token, "move"), A);
-//             A = interpret_response(get_struct(token, "rotate_left"), A);
-//             A->l++;
-//         }
-//     }
-//     print_map(A);
-//     return A;
-// }
 
 Map* seek_left_corner(Map* A, char* token){
     if(strcmp(A->direction, "N") == 0){
@@ -260,7 +179,6 @@ Map* bot(Map* A, char* token){
         A = seek_wall(A, token);
         x0 = loc_to_globx(A->x, A);     //poniewaz podczas algorytmu seek_left_corner mapa sie rozszerza, to postanowilismy zapisac x0 i y0 we wspolrzednych globalnych                                         
         y0 = loc_to_globy(A->y, A);     //wtedy w warunku while na biezaco sprawdzamy globalne wspolrzedne i nie ma znaczenia rozmiar mapy wzgledem tego co byl na poczatku
-        printf("%d\n%d\n",y0,x0);
         while(x0 == loc_to_globx(A->x, A) && y0 == loc_to_globy(A->y, A)){
             A = interpret_response(get_struct(token, "move"), A);
             if(x0 == loc_to_globx(A->x, A) && y0 == loc_to_globy(A->y, A))
@@ -268,9 +186,7 @@ Map* bot(Map* A, char* token){
         }
         do{ //trzeba tutaj zrobic cos takiego, zeby on najpierw wyszedl z tego miejsca gdzie znalazl sciane a pozniej dopiero zapisal x0 i y0 bo jak na przyklad bedzie musial 2 razy sie obrocic to od razu przerwie while bo x = x0 i y = y0
             A = seek_left_corner(A, token);
-            printf("petla\n");
         } while(!(x0 == loc_to_globx(A->x, A) && y0 == loc_to_globy(A->y, A))); //chodzi o to zeby przerywal algorytm kiedy wroci do miejsca w ktorym zaczal seek_left_corner.
-        printf("po petli\n");
         
         
     //}

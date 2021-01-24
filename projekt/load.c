@@ -75,7 +75,7 @@ char *make_request(char *url)
     }
 }
 
-char* get_request(char* token, char* command){
+char* get_request(char* token, char* command){ //zwraca w formacie jsona
     char* url;
     if(strcmp(command, "rotate_left") != 0 && strcmp(command, "rotate_right") != 0){
         url = (char*) malloc(sizeof(char)*(strlen("http://edi.iem.pw.edu.pl:30000/worlds/api/v1/worlds/") + strlen(command) + 1 + strlen(token) + 1));
