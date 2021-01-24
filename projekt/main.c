@@ -1,5 +1,6 @@
 #include "load.h"
 #include "logic.h"
+#include "image.h"
 
 //null - 0
 //grass - 1
@@ -11,8 +12,7 @@ int main(int argc, char **argv)
     char *token = argv[1];
     char command [30];
 
-    Map *map = create_map(5, 5);
-    map = set_map(map, token);
+    Map* map = set_map(map, token);
     print_map(map);
 
     Response* response;
@@ -28,35 +28,40 @@ int main(int argc, char **argv)
         }
         else if(strcmp(argv[2], "test-response") == 0){
             FILE* fin = fopen("derulo.json", "r+");
-            Response* a = get_struct(token, "info");
-            printf("x: %d\ny: %d\nfield_type: %s\n", a->x, a->y, a->field_type);
+            response = get_struct(token, "info");
+            printf("x: %d\ny: %d\nfield_type: %s\n", response->x, response->y, response->field_type);
         }
         else if(strcmp(argv[2], "test-save-map") == 0){
             FILE* f = fopen("mapa.txt", "r+");
             map = bot(map, token);
             fprint_map(map, f);
             fclose(f);
+            png_map("mapa.png", "tilesn.png", map);
         }
         else if(strcmp(argv[2], "test-load-map") == 0){
             FILE* f = fopen("mapa.txt", "r+");
             map = load_map(f);
             print_map(map);
             fclose(f);
+            png_map("mapa.png", "tilesn.png", map);
         }
         else if(strcmp(argv[2], "test-seek-wall") == 0){
             map = seek_wall(map, token);
             print_map(map);
+            png_map("mapa.png", "tilesn.png", map);
         }
         else if(strcmp(argv[2], "test-bot") == 0){
             map = bot(map, token);
             print_map(map);
+            png_map("mapa.png", "tilesn.png", map);
         }
         else if(strcmp(argv[2], "reset") == 0){
             map = reset_map(map, token);
             print_map(map);
+            png_map("mapa.png", "tilesn.png", map);
         }
     }
-    else{
+    if(argc == 2 || strcmp(argv[2], "test-load-map") == 0){
         while(1){ //zeby wyjsc z programu nalezy wcisnac ctrl + c
             fgets(command, 30, stdin);
             strcpy(command, strtok(command, "\n"));
@@ -78,6 +83,7 @@ int main(int argc, char **argv)
 
             
             print_map(map);
+            png_map("mapa.png", "tilesn.png", map);
         }
     }
 

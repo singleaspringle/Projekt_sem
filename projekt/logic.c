@@ -37,6 +37,7 @@ void free_response(Response* response){
 Map* set_map(Map* map, char* token){
     Response* start = get_struct(token, "info");
 
+    map = create_map(5, 5);
     map->dx = get_dx(start->x);
     map->dy = get_dy(start->y);
     map = interpret_response(start, map);
