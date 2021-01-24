@@ -5,7 +5,7 @@ test:
 	./wykonaj qwerty_29
 
 test-memory:
-	valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes --track-origins=yes -v ./wykonaj qwerty_29 bot
+	valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes --track-origins=yes -v ./wykonaj qwerty_29 test-bot
 
 test-seek-wall:
 	./wykonaj qwerty_29 test-seek-wall
