@@ -196,6 +196,13 @@ int tile_number(int x){
     return 4;
 }
 
+void free_row_pointers(png_bytep *row_pointers, int height){
+  for(int i = 0; i < height; i++){
+      free(row_pointers[i]);
+    }
+    free(row_pointers);
+}
+
 void png_map(char* fout, char* fin, Map* A) {
     int width, height;
     png_byte color_type;
@@ -214,4 +221,5 @@ void png_map(char* fout, char* fin, Map* A) {
       }
     }
     write_png_file(fout, (A->c)*32, (A->r)*32, color_type, bit_depth, row_pointers_out);
+    free_row_pointers(row_pointers, height);
 }

@@ -6,9 +6,9 @@ int main(int argc, char* argv[]){
     Map* map;
     char* token = argv[1];
 
-    map = create_map(5, 5);
     map = set_map(map, token); //testuje tez get_dx i get_dy oraz offset
     print_map(map);
+    free_map(map);
     map = reset_map(map, token);
     print_map(map);
 

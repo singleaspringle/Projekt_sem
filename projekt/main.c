@@ -29,7 +29,8 @@ int main(int argc, char **argv)
 
             if(strcmp(command, "reset") == 0)
             {
-                    map = reset_map(map, token);
+                free_map(map);
+                map = reset_map(map, token);
             }
             else if(strcmp(command, "explore") == 0)
             {
