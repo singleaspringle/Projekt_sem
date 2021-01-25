@@ -56,17 +56,17 @@ Response* get_struct(char* token, char *command)
     return wynik;
 } 
 
-Lista* get_explore(char *token)
+List* get_explore(char *token)
 {
     char* request = get_request(token, "explore");
-    Lista* wynik = calloc(1, sizeof(Lista));
+    List* wynik = calloc(1, sizeof(List));
     cJSON* json = cJSON_Parse(request);
 
     wynik->status = calloc(7, sizeof(char));
 
-    wynik->l1 = calloc(1, sizeof(Pole));
-    wynik->l2 = calloc(1, sizeof(Pole));
-    wynik->l3 = calloc(1, sizeof(Pole));
+    wynik->l1 = calloc(1, sizeof(Field));
+    wynik->l2 = calloc(1, sizeof(Field));
+    wynik->l3 = calloc(1, sizeof(Field));
 
     wynik->l1->field_type = calloc(5, sizeof(char));
     wynik->l2->field_type = calloc(5, sizeof(char));
@@ -99,4 +99,25 @@ Lista* get_explore(char *token)
     free(request);
 
     return wynik;
+}
+
+void free_explore(List* explore){
+    free(explore->status);
+    free(explore->l1->field_type);
+    free(explore->l2->field_type);
+    free(explore->l3->field_type);
+    free(explore->l1);
+    free(explore->l2);
+    free(explore->l3);
+    free(explore);
+}
+
+void free_response(Response* response){
+    free(response->field_bonus);
+    free(response->field_type);
+    free(response->name);
+    free(response->session);
+    free(response->direction);
+    free(response->status);
+    free(response);
 }

@@ -15,7 +15,7 @@ Map* set_map(Map* map, char* token);
 Map* reset_map(Map* map, char* token);
 Map* seek_left_corner(Map* A, char* token);
 Map* bot(Map* A, char* token);
-Map* interpret_explore (Lista* explore, Map* map);
+Map* interpret_explore (List* explore, Map* map);
 Map* interpret_response (Response* response, Map* map);
 char* brzeg(Map* A);
 Map* add_chunk(Map* A);

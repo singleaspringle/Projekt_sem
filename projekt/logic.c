@@ -13,27 +13,6 @@ int type(char* nazwa){
     else return -1;
 }
 
-void free_explore(Lista* explore){
-    free(explore->status);
-    free(explore->l1->field_type);
-    free(explore->l2->field_type);
-    free(explore->l3->field_type);
-    free(explore->l1);
-    free(explore->l2);
-    free(explore->l3);
-    free(explore);
-}
-
-void free_response(Response* response){
-    free(response->field_bonus);
-    free(response->field_type);
-    free(response->name);
-    free(response->session);
-    free(response->direction);
-    free(response->status);
-    free(response);
-}
-
 Map* set_map(Map* map, char* token){
     Response* start = get_struct(token, "info");
 
@@ -172,7 +151,7 @@ Map* seek_left_corner(Map* A, char* token){
     return A;
 }
 
-Map* bot(Map* A, char* token){
+Map* bot(Map* A, char* token){ //bota wywala jak sie go skieruje na wewnetrzna przeszkode
     int x0, y0;
     A->l = 0;
     //jezeli A->l = 4 to jest wewnetrzna przeszkoda, jezeli A->l = -4 to znaczy ze jest zewnetrzna otoczka
@@ -291,7 +270,7 @@ Map* add_chunk(Map* A){
     }
 }
 
-Map* interpret_explore (Lista* explore, Map* map){
+Map* interpret_explore (List* explore, Map* map){
     int l = map->l;
     Map* new = add_chunk(map);
     new->step ++;

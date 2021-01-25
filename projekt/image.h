@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <png.h>
-#include "map.h"
+#include "logic.h"
 
 void read_png_file(char *filename, int *width, int *height, 
      png_byte *color_type,  

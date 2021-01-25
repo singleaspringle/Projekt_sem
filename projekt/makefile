@@ -1,29 +1,47 @@
-all:
-	cc main.c load.c response.c logic.c map.c image.c -o wykonaj -lcurl -lpng cJSON/cJSON.o
+DEPS = main.c load.c response.c map.c logic.c image.c
+LIBS = -lcurl -lpng cJSON/cJSON.o
+TESTS = tests/main_test_load.c tests/main_test_response.c tests/main_test_map.c tests/main_test_logic.c tests/main_test_image.c
 
-test:
-	./wykonaj qwerty_29
+%.o: %.c
+	cc -c $^ -o $@ ${LIBS}
 
-test-memory:
-	valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes --track-origins=yes -v ./wykonaj qwerty_29 test-bot
+main:
+	cc main.c load.c response.c map.c logic.c image.c -o program -Wall --pedantic -lcurl -lpng cJSON/cJSON.o 
 
-test-seek-wall:
-	./wykonaj qwerty_29 test-seek-wall
+tests:
+	cd tests &&	cc main_test_load.c ../load.c -o test_load -Wall --pedantic -lcurl -lpng ../cJSON/cJSON.o
+	cd tests &&	cc main_test_response.c ../response.c -o test_response -Wall --pedantic -lcurl -lpng ../cJSON/cJSON.o
+	cd tests &&	cc main_test_map.c ../map.c -o test_map -Wall --pedantic -lcurl -lpng ../cJSON/cJSON.o
+	cd tests &&	cc main_test_logic.c ../logic.c -o test_logic -Wall --pedantic -lcurl -lpng ../cJSON/cJSON.o
+	cd tests &&	cc main_test_image.c ../image.c -o test_image -Wall --pedantic -lcurl -lpng ../cJSON/cJSON.o
 
-test-bot:
-	./wykonaj qwerty_29 test-bot
+test_load: tests
+	cd tests &&	./test_load qwerty_29
 
-test-load-map:
-	./wykonaj qwerty_29 test-load-map
+test_response: tests
+	/mnt/d/projekty/sem/1dm1103_20z/projekt/tests/test_response qwerty_29
 
-test-save-map:
-	./wykonaj qwerty_29 test-save-map
+test_map: tests
+	/mnt/d/projekty/sem/1dm1103_20z/projekt/tests/test_map
 
-test-response:
-	./wykonaj qwerty_29 test-response
+test_logic: tests
+	/mnt/d/projekty/sem/1dm1103_20z/projekt/tests/test_logic qwerty_29
 
-test-load:
-	./wykonaj qwerty_29 test-load
+test_image: tests
+	/mnt/d/projekty/sem/1dm1103_20z/projekt/tests/test_image
 
-test-reset:
-	./wykonaj qwerty_20 reset
+test_bot: main
+	./program qwerty_29 bot
+
+test_move: main
+	./program qwerty_29
+
+clean:
+	rm program
+	cd tests;
+	rm test_load
+	rm test_response
+	rm test_map
+	rm test_logic
+	rm test_image
+	cd ..;

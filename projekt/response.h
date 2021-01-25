@@ -13,20 +13,22 @@ typedef struct _Response{
     char* field_bonus;
 } Response;
 
-typedef struct _Pole{
+typedef struct _Field{
     int x, y;
     char *field_type;
-} Pole;
+} Field;
 
-typedef struct _Lista {
+typedef struct _List {
     char* status;
-    Pole* l1;
-    Pole* l2;
-    Pole* l3; //potrzebne do explore
-} Lista;
+    Field* l1;
+    Field* l2;
+    Field* l3; //potrzebne do explore
+} List;
 
-Lista* get_explore(char *token);
+List* get_explore(char *token);
 void clean_response (Response *dana);
 Response* get_struct(char* token, char *command);
+void free_explore(List* explore);
+void free_response(Response* response);
 
 #endif
