@@ -26,7 +26,6 @@ typedef struct _List {
 } List;
 
 List* get_explore(char *token);
-void clean_response (Response *dana);
 Response* get_struct(char* token, char *command);
 void free_explore(List* explore);
 void free_response(Response* response);

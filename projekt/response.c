@@ -1,16 +1,5 @@
 #include "response.h"
 
-void clean_response (Response *dana)
-{
-    free (dana->status);
-    free (dana->name);
-    free (dana->session);
-    free (dana->direction);
-    free (dana->field_type);
-    free (dana->field_bonus);
-    free (dana);
-}
-
 Response* get_struct(char* token, char *command)
 {
     char* request = get_request(token, command);

@@ -191,7 +191,7 @@ Map* bot(Map* A, char* token){ //bota wywala jak sie go skieruje na wewnetrzna p
     return A;
 }
 
-char* brzeg(Map* A){ //pokazuje przy jakim brzegu jestesmy
+char* edge(Map* A){ //pokazuje przy jakim brzegu jestesmy
     if(A->y == 0){ //przy gornym brzegu
         if(A->x == A->c - 1) //gorny prawy
             return "NE";
@@ -218,7 +218,7 @@ char* brzeg(Map* A){ //pokazuje przy jakim brzegu jestesmy
 
 Map* add_chunk(Map* A){
     Map* B = NULL;
-    if (strcmp(brzeg(A), "N") == 0 || strcmp(brzeg(A), "NE") == 0 || strcmp(brzeg(A), "NW") == 0){
+    if (strcmp(edge(A), "N") == 0 || strcmp(edge(A), "NE") == 0 || strcmp(edge(A), "NW") == 0){
         B = create_map(2*A->r, A->c);
         strcpy(B->direction, A->direction);
         B->step = A->step;
@@ -234,7 +234,7 @@ Map* add_chunk(Map* A){
         free_map(A);
         return B;
     }
-    if (strcmp(brzeg(A), "E") == 0 || strcmp(brzeg(A), "NE") == 0 || strcmp(brzeg(A), "SE") == 0){
+    if (strcmp(edge(A), "E") == 0 || strcmp(edge(A), "NE") == 0 || strcmp(edge(A), "SE") == 0){
         B = create_map(A->r, 2*A->c);
         strcpy(B->direction, A->direction);
         B->step = A->step;
@@ -250,7 +250,7 @@ Map* add_chunk(Map* A){
         free_map(A);
         return B;
     }
-    if (strcmp(brzeg(A), "S") == 0 || strcmp(brzeg(A), "SE") == 0 || strcmp(brzeg(A), "SW") == 0){
+    if (strcmp(edge(A), "S") == 0 || strcmp(edge(A), "SE") == 0 || strcmp(edge(A), "SW") == 0){
         B = create_map(2*A->r, A->c);
         strcpy(B->direction, A->direction);
         B->step = A->step;
@@ -266,7 +266,7 @@ Map* add_chunk(Map* A){
         free_map(A);
         return B;
     }
-    if (strcmp(brzeg(A), "W") == 0 || strcmp(brzeg(A), "NW") == 0 || strcmp(brzeg(A), "SW") == 0){
+    if (strcmp(edge(A), "W") == 0 || strcmp(edge(A), "NW") == 0 || strcmp(edge(A), "SW") == 0){
         B = create_map(A->r, 2*A->c);
         strcpy(B->direction, A->direction);
         B->step = A->step;

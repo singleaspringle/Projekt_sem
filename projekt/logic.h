@@ -22,7 +22,7 @@ Map* seek_left_corner(Map* A, char* token);
 Map* bot(Map* A, char* token);
 Map* interpret_explore (List* explore, Map* map);
 Map* interpret_response (Response* response, Map* map);
-char* brzeg(Map* A);
+char* edge(Map* A);
 Map* add_chunk(Map* A);
 
 #endif
