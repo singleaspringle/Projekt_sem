@@ -166,6 +166,8 @@ Map* seek_left_corner(Map* A, char* token){
 Map* explore_border(Map* A, char* token, int x0, int y0){
     do{
         A = seek_left_corner(A, token);
+        if(A->l == 4)
+            break;
     } while(!(x0 == loc_to_globx(A->x, A) && y0 == loc_to_globy(A->y, A)));
 
     return A;
@@ -180,12 +182,12 @@ Map* bot(Map* A, char* token){
         y0 = loc_to_globy(A->y, A);
         A = get_out_of_blind_corner(A, token, x0, y0); //zeby A->x != x0 i A->y != y0
         A = explore_border(A, token, x0, y0);
-        printf("%d\n", A->l);
+        printf("l = %d\n", A->l);
 
-        if(A->l == 4)
-            A = turn_right(A, token);
-        else if(A->l == -4)
+        if(A->l == -4)
             break;
+        else
+            continue;
     }
 
     return A;
