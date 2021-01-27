@@ -13,7 +13,7 @@ Map* create_map(int r, int c){
     A->x = 2;
     A->y = 2;
     A->step = 0;
-    A->direction = calloc(1, sizeof(char));
+    A->direction = calloc(2, sizeof(char));
     A->l = 0;
 
     return A;

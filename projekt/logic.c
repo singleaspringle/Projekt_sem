@@ -104,9 +104,9 @@ Map* get_out_of_blind_corner(Map* A, char* token, int x0, int y0){
         A = interpret_response(get_struct(token, "move"), A);
         if(x0 == loc_to_globx(A->x, A) && y0 == loc_to_globy(A->y, A)){
             A = interpret_response(get_struct(token, "rotate_right"), A);
-            A->l--;
         }
     }
+    A->l = -1;
 
     return A;
 }
@@ -171,13 +171,13 @@ Map* explore_border(Map* A, char* token, int x0, int y0){
     return A;
 }
 
-Map* bot(Map* A, char* token){ //bota wywala jak sie go skieruje na wewnetrzna przeszkode
+Map* bot(Map* A, char* token){
     int x0, y0;
-    while(1){//tutaj powinno byc cos takiego ze jakby jedno przejscie przez fora to jest jedna otoczka. Kiedy skonczy to zaczyna sie drugie przejscie przez fora i jakos trzeba go skierowac zeby szukal nowej otoczki, albo zaczal wypelniac
+    while(1){ //jedno przejscie petli to jedna otoczka
         A->l = 0;
         A = seek_wall(A, token);
-        x0 = loc_to_globx(A->x, A);     //poniewaz podczas algorytmu seek_left_corner mapa sie rozszerza, to postanowilismy zapisac x0 i y0 we wspolrzednych globalnych                                         
-        y0 = loc_to_globy(A->y, A);     //wtedy w warunku while na biezaco sprawdzamy globalne wspolrzedne i nie ma znaczenia rozmiar mapy wzgledem tego co byl na poczatku dzialania bota
+        x0 = loc_to_globx(A->x, A);                                              
+        y0 = loc_to_globy(A->y, A);
         A = get_out_of_blind_corner(A, token, x0, y0); //zeby A->x != x0 i A->y != y0
         A = explore_border(A, token, x0, y0);
         printf("%d\n", A->l);
@@ -193,20 +193,10 @@ Map* bot(Map* A, char* token){ //bota wywala jak sie go skieruje na wewnetrzna p
 
 char* edge(Map* A){ //pokazuje przy jakim brzegu jestesmy
     if(A->y == 0){ //przy gornym brzegu
-        if(A->x == A->c - 1) //gorny prawy
-            return "NE";
-        else if(A->x == 0) //gorny lewy
-            return "NW";
-        else //gorny
-            return "N";
+        return "N";
     }
     else if(A->y == A->r - 1){ //przy dolnym brzegu
-        if(A->x == A->c - 1) //dolny prawy
-            return "SE";
-        else if(A->x == 0) //dolny lewy
-            return "SW";
-        else //dolny
-            return "S";    
+        return "S";    
     }
     else if(A->x == A->c - 1) //prawy
         return "E";
@@ -218,7 +208,7 @@ char* edge(Map* A){ //pokazuje przy jakim brzegu jestesmy
 
 Map* add_chunk(Map* A){
     Map* B = NULL;
-    if (strcmp(edge(A), "N") == 0 || strcmp(edge(A), "NE") == 0 || strcmp(edge(A), "NW") == 0){
+    if (strcmp(edge(A), "N") == 0){
         B = create_map(2*A->r, A->c);
         strcpy(B->direction, A->direction);
         B->step = A->step;
@@ -234,7 +224,7 @@ Map* add_chunk(Map* A){
         free_map(A);
         return B;
     }
-    if (strcmp(edge(A), "E") == 0 || strcmp(edge(A), "NE") == 0 || strcmp(edge(A), "SE") == 0){
+    if (strcmp(edge(A), "E") == 0){
         B = create_map(A->r, 2*A->c);
         strcpy(B->direction, A->direction);
         B->step = A->step;
@@ -250,7 +240,7 @@ Map* add_chunk(Map* A){
         free_map(A);
         return B;
     }
-    if (strcmp(edge(A), "S") == 0 || strcmp(edge(A), "SE") == 0 || strcmp(edge(A), "SW") == 0){
+    if (strcmp(edge(A), "S") == 0){
         B = create_map(2*A->r, A->c);
         strcpy(B->direction, A->direction);
         B->step = A->step;
@@ -266,7 +256,7 @@ Map* add_chunk(Map* A){
         free_map(A);
         return B;
     }
-    if (strcmp(edge(A), "W") == 0 || strcmp(edge(A), "NW") == 0 || strcmp(edge(A), "SW") == 0){
+    if (strcmp(edge(A), "W") == 0){
         B = create_map(A->r, 2*A->c);
         strcpy(B->direction, A->direction);
         B->step = A->step;
@@ -290,7 +280,7 @@ Map* add_chunk(Map* A){
 Map* interpret_explore (List* explore, Map* map){
     int l = map->l;
     Map* new = add_chunk(map);
-    new->step ++;
+    new->step++;
     new->l = l;
 
     if(strcmp(new->direction, "E") == 0){

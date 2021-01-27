@@ -6,12 +6,12 @@ Response* get_struct(char* token, char *command)
     Response* wynik = calloc(1, sizeof(Response));
     cJSON* json = cJSON_Parse(request);
 
-    wynik->status = calloc(7, sizeof(char));
-    wynik->name = calloc(14, sizeof(char));
+    wynik->status = calloc(8, sizeof(char));
+    wynik->name = calloc(15, sizeof(char));
     wynik->session = calloc(100, sizeof(char));
-    wynik->direction = calloc(1, sizeof(char));
-    wynik->field_type = calloc(5, sizeof(char));
-    wynik->field_bonus = calloc(10, sizeof(char));
+    wynik->direction = calloc(2, sizeof(char));
+    wynik->field_type = calloc(6, sizeof(char));
+    wynik->field_bonus = calloc(12, sizeof(char));
 
     if(json == NULL){
         const char* error_ptr = cJSON_GetErrorPtr();
@@ -51,15 +51,15 @@ List* get_explore(char *token)
     List* wynik = calloc(1, sizeof(List));
     cJSON* json = cJSON_Parse(request);
 
-    wynik->status = calloc(7, sizeof(char));
+    wynik->status = calloc(8, sizeof(char));
 
     wynik->l1 = calloc(1, sizeof(Field));
     wynik->l2 = calloc(1, sizeof(Field));
     wynik->l3 = calloc(1, sizeof(Field));
 
-    wynik->l1->field_type = calloc(5, sizeof(char));
-    wynik->l2->field_type = calloc(5, sizeof(char));
-    wynik->l3->field_type = calloc(5, sizeof(char));
+    wynik->l1->field_type = calloc(6, sizeof(char));
+    wynik->l2->field_type = calloc(6, sizeof(char));
+    wynik->l3->field_type = calloc(6, sizeof(char));
 
     if(json == NULL){
         const char* error_ptr = cJSON_GetErrorPtr();
