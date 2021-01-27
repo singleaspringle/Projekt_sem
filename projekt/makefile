@@ -30,7 +30,7 @@ test-image: tests/main_test_image.o $(LIB)
 	./tests/test-image
 
 memory: program
-	valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes --track-origins=yes -v ./program qwerty_29 bot
+	valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes --track-origins=yes -v ./program qwerty_29
 	
 memory-response: test-response
 	valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes --track-origins=yes -v ./tests/test-response qwerty_29
@@ -50,10 +50,7 @@ memory-image: test-image
 %.o:%.c
 	$(COMPILER) -c $^ -o $@
 
-test-bot: program
-	./program qwerty_29 bot
-
-test-move: program
+test: program
 	./program qwerty_29
 
 clean:
