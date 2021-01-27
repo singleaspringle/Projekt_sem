@@ -15,7 +15,7 @@ typedef struct _Response{
 
 typedef struct _Field{
     int x, y;
-    char *field_type;
+    char* field_type;
 } Field;
 
 typedef struct _List {
@@ -25,8 +25,8 @@ typedef struct _List {
     Field* l3; //potrzebne do explore
 } List;
 
-List* get_explore(char *token);
-Response* get_struct(char* token, char *command);
+List* get_explore(char* token);
+Response* get_struct(char* token, char* command);
 void free_explore(List* explore);
 void free_response(Response* response);
 

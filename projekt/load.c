@@ -37,7 +37,6 @@ char *make_request(char *url)
     Memory chunk;
     chunk.size = 0;
     chunk.response = NULL;
-    curl_global_init(0);
 
     curl = curl_easy_init();
     if (curl)
@@ -62,14 +61,12 @@ char *make_request(char *url)
         /* Sprawdzamy czy wystapił jakis błąd? */
         if (res != CURLE_OK){
             curl_easy_cleanup(curl);
-            curl_global_cleanup();
             return "Błąd!\n";
         }
         else
         {
             /* zawsze po sobie sprzątaj */
             curl_easy_cleanup(curl);
-            curl_global_cleanup();
             return chunk.response;
         }
     }

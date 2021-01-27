@@ -11,7 +11,7 @@ Response* get_struct(char* token, char *command)
     wynik->session = calloc(100, sizeof(char));
     wynik->direction = calloc(2, sizeof(char));
     wynik->field_type = calloc(6, sizeof(char));
-    wynik->field_bonus = calloc(12, sizeof(char));
+    wynik->field_bonus = calloc(15, sizeof(char));
 
     if(json == NULL){
         const char* error_ptr = cJSON_GetErrorPtr();
@@ -24,15 +24,15 @@ Response* get_struct(char* token, char *command)
 
     strcpy(wynik->name, cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(json, "payload"), 0)->valuestring);
 
-    wynik->x = cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(json, "payload"), 1)->valueint;
+    wynik->x = (int) cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(json, "payload"), 1)->valueint;
 
-    wynik->y = cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(json, "payload"), 2)->valueint;
+    wynik->y = (int) cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(json, "payload"), 2)->valueint;
 
     strcpy(wynik->session, cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(json, "payload"), 3)->valuestring);
 
     strcpy(wynik->direction, cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(json, "payload"), 4)->valuestring);
 
-    wynik->step = cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(json, "payload"), 5)->valueint;
+    wynik->step = (int) cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(json, "payload"), 5)->valueint;
 
     strcpy(wynik->field_type, cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(json, "payload"), 6)->valuestring);
 
@@ -71,16 +71,16 @@ List* get_explore(char *token)
     
     strcpy(wynik->status, cJSON_GetObjectItemCaseSensitive(json, "status")->valuestring);
 
-    wynik->l1->x = cJSON_GetObjectItemCaseSensitive(cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(json, "payload"), "list"), 0), "x")->valueint;
-    wynik->l1->y = cJSON_GetObjectItemCaseSensitive(cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(json, "payload"), "list"), 0), "y")->valueint;
+    wynik->l1->x = (int) cJSON_GetObjectItemCaseSensitive(cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(json, "payload"), "list"), 0), "x")->valueint;
+    wynik->l1->y = (int) cJSON_GetObjectItemCaseSensitive(cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(json, "payload"), "list"), 0), "y")->valueint;
     strcpy(wynik->l1->field_type, cJSON_GetObjectItemCaseSensitive(cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(json, "payload"), "list"), 0), "type")->valuestring);
 
-    wynik->l2->x = cJSON_GetObjectItemCaseSensitive(cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(json, "payload"), "list"), 1), "x")->valueint;
-    wynik->l2->y = cJSON_GetObjectItemCaseSensitive(cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(json, "payload"), "list"), 1), "y")->valueint;
+    wynik->l2->x = (int) cJSON_GetObjectItemCaseSensitive(cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(json, "payload"), "list"), 1), "x")->valueint;
+    wynik->l2->y = (int) cJSON_GetObjectItemCaseSensitive(cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(json, "payload"), "list"), 1), "y")->valueint;
     strcpy(wynik->l2->field_type, cJSON_GetObjectItemCaseSensitive(cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(json, "payload"), "list"), 1), "type")->valuestring);
 
-    wynik->l3->x = cJSON_GetObjectItemCaseSensitive(cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(json, "payload"), "list"), 2), "x")->valueint;
-    wynik->l3->y = cJSON_GetObjectItemCaseSensitive(cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(json, "payload"), "list"), 2), "y")->valueint;
+    wynik->l3->x = (int) cJSON_GetObjectItemCaseSensitive(cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(json, "payload"), "list"), 2), "x")->valueint;
+    wynik->l3->y = (int) cJSON_GetObjectItemCaseSensitive(cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(json, "payload"), "list"), 2), "y")->valueint;
     strcpy(wynik->l3->field_type, cJSON_GetObjectItemCaseSensitive(cJSON_GetArrayItem(cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(json, "payload"), "list"), 2), "type")->valuestring);
 
     //cJSON_free(json);
