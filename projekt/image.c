@@ -160,7 +160,7 @@ png_bytep * create_image(int width, int height) {
 void init_png_file(int width, int height, png_bytep *row_pointers) {
   for(int y = 0; y < height; y++) {
     png_bytep row = row_pointers[y];
-    for(int x = 0; x < width; x++) {
+    for(int x = 0; x < width; x++){
       png_bytep px = &(row[x * 4]);
       (*px) = 255;
       *(px+1) = 255;
